@@ -46,8 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Light blue theme colors for this page.
-    final Color pageBg = Colors.white;
+    const pageBg = Colors.white;
 
     final pages = [
       HomeContent(
@@ -106,10 +105,9 @@ class HomeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Light blue theme colors for this page.
-    final Color primaryText = const Color(0xFF123B5D);
-    final Color secondaryText = const Color(0xFF35627F);
-    final Color accent = const Color(0xFF176B87);
+    final Color primaryText = const Color(0xFF3E2B18);
+    final Color secondaryText = const Color(0xFF6B4B35);
+    final Color accent = const Color(0xFF8B5E3C);
 
     return Stack(
       children: [
@@ -231,7 +229,7 @@ class HomeContent extends StatelessWidget {
                             child: Container(
                               height: 96,
                               decoration: BoxDecoration(
-                                color: const Color(0xFFE5F2F7),
+                                color: const Color(0xFFF0E3D2),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               padding: const EdgeInsets.all(12),
@@ -294,7 +292,7 @@ class HomeContent extends StatelessWidget {
                             child: Container(
                               height: 96,
                               decoration: BoxDecoration(
-                                color: const Color(0xFFDCECF4),
+                                color: const Color(0xFFEADBC8),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               padding: const EdgeInsets.all(12),
@@ -304,7 +302,7 @@ class HomeContent extends StatelessWidget {
                                     width: 44,
                                     height: 44,
                                     decoration: BoxDecoration(
-                                      color: const Color(0xFF2F86A5),
+                                      color: const Color(0xFF8B5E3C),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: const Icon(
@@ -533,7 +531,6 @@ class _BannerCarouselState extends State<_BannerCarousel> {
   late final PageController _controller;
   Timer? _timer;
   int _currentPage = 0;
-  final int _loopMultiplier = 1000;
 
   @override
   void initState() {
@@ -722,7 +719,7 @@ class _AutoScrollCategoriesState extends State<_AutoScrollCategories> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFA9D0DF)),
+                border: Border.all(color: const Color(0xFFD8C2A8)),
               ),
               padding: const EdgeInsets.all(8),
               child: Column(
@@ -851,7 +848,7 @@ class _RandomShellsGridState extends State<RandomShellsGrid> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFFA9D0DF)),
+                  border: Border.all(color: const Color(0xFFD8C2A8)),
                 ),
                 padding: const EdgeInsets.all(8),
                 child: Column(

@@ -24,7 +24,7 @@ class ScanScreen extends StatefulWidget {
 
 class _ScanScreenState extends State<ScanScreen>
     with SingleTickerProviderStateMixin {
-  static const String _defaultBackendUrl = 'http://10.0.0.77:8000';
+  static const String _defaultBackendUrl = 'https://seastem.up.railway.app';
   static const String _backendUrlOverride = String.fromEnvironment(
     'BACKEND_URL',
     defaultValue: _defaultBackendUrl,
@@ -43,8 +43,7 @@ class _ScanScreenState extends State<ScanScreen>
     if (configuredValue.isNotEmpty) {
       return configuredValue;
     }
-
-    return Platform.isAndroid ? 'http://10.0.2.2:8000' : 'http://localhost:8000';
+    return _defaultBackendUrl;
   }
 
   Future<File> _cropImageToScanFrame(String imagePath) async {
@@ -52,42 +51,42 @@ class _ScanScreenState extends State<ScanScreen>
       // Read the original image
       final imageBytes = File(imagePath).readAsBytesSync();
       final originalImage = img.decodeImage(imageBytes);
-      
+
       if (originalImage == null) {
         throw Exception('Failed to decode image');
       }
 
       // Scan frame is 280x280 and centered
       const frameSize = 280.0;
-      
+
       // Calculate crop bounds based on screen dimensions
       final screenWidth = MediaQuery.of(context).size.width;
       final screenHeight = MediaQuery.of(context).size.height;
-      
+
       // The scan frame is centered
       final frameLeft = (screenWidth - frameSize) / 2;
       final frameTop = (screenHeight - frameSize) / 2;
-      
+
       // Calculate the ratio between image dimensions and screen dimensions
       final imageWidth = originalImage.width.toDouble();
       final imageHeight = originalImage.height.toDouble();
-      
+
       // For camera capture, the image orientation might differ
       // Adjust crop coordinates based on actual image dimensions
       final widthRatio = imageWidth / screenWidth;
       final heightRatio = imageHeight / screenHeight;
-      
+
       final cropX = (frameLeft * widthRatio).toInt();
       final cropY = (frameTop * heightRatio).toInt();
       final cropWidth = (frameSize * widthRatio).toInt();
       final cropHeight = (frameSize * heightRatio).toInt();
-      
+
       // Ensure crop bounds are within image bounds
       final safeX = cropX.clamp(0, originalImage.width - 1);
       final safeY = cropY.clamp(0, originalImage.height - 1);
       final safeWidth = cropWidth.clamp(1, originalImage.width - safeX);
       final safeHeight = cropHeight.clamp(1, originalImage.height - safeY);
-      
+
       // Crop the image
       final croppedImage = img.copyCrop(
         originalImage,
@@ -96,14 +95,14 @@ class _ScanScreenState extends State<ScanScreen>
         width: safeWidth,
         height: safeHeight,
       );
-      
+
       // Save cropped image to temporary file
       final tempDir = await getTemporaryDirectory();
       final croppedFile = File(
         '${tempDir.path}/cropped_${DateTime.now().millisecondsSinceEpoch}.jpg',
       );
       croppedFile.writeAsBytesSync(img.encodeJpg(croppedImage, quality: 95));
-      
+
       return croppedFile;
     } catch (e) {
       print('Error cropping image: $e');
@@ -128,10 +127,7 @@ class _ScanScreenState extends State<ScanScreen>
       final cameras = await availableCameras();
       final firstCamera = cameras.first;
 
-      _cameraController = CameraController(
-        firstCamera,
-        ResolutionPreset.high,
-      );
+      _cameraController = CameraController(firstCamera, ResolutionPreset.high);
 
       _initializeControllerFuture = _cameraController!.initialize();
       setState(() {});
@@ -186,9 +182,9 @@ class _ScanScreenState extends State<ScanScreen>
       setState(() {
         _isProcessing = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Prediction failed: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Prediction failed: $e')));
       print('Error capturing image: $e');
     }
   }
@@ -209,24 +205,30 @@ class _ScanScreenState extends State<ScanScreen>
 
     final client = http.Client();
     try {
-      final streamedResponse = await client.send(request).timeout(
-        const Duration(seconds: 30),
-        onTimeout: () {
-          throw http.ClientException('Request timed out while contacting backend');
-        },
-      );
+      final streamedResponse = await client
+          .send(request)
+          .timeout(
+            const Duration(seconds: 30),
+            onTimeout: () {
+              throw http.ClientException(
+                'Request timed out while contacting backend',
+              );
+            },
+          );
       final responseBody = await streamedResponse.stream.bytesToString();
 
-      if (streamedResponse.statusCode < 200 || streamedResponse.statusCode >= 300) {
+      if (streamedResponse.statusCode < 200 ||
+          streamedResponse.statusCode >= 300) {
         throw Exception('Backend prediction failed: $responseBody');
       }
 
       final decoded = jsonDecode(responseBody) as Map<String, dynamic>;
       final safePrediction = decoded['prediction'] ?? 'unknown';
       final safeLabel = decoded['label'] ?? 'Unknown shell';
-      final safeConfidence = (decoded['confidence'] is num)
-          ? (decoded['confidence'] as num).toDouble()
-          : 0.0;
+      final safeConfidence =
+          (decoded['confidence'] is num)
+              ? (decoded['confidence'] as num).toDouble()
+              : 0.0;
 
       final result = ScanResult(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -262,13 +264,16 @@ class _ScanScreenState extends State<ScanScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Color.fromARGB(255, 52, 52, 52),
+          ),
           onPressed: () {
             widget.onBackPressed?.call();
           },
@@ -276,27 +281,37 @@ class _ScanScreenState extends State<ScanScreen>
         title: const Text(
           'Identify Seashell',
           style: TextStyle(
-            color: Colors.white,
+            color: Color.fromARGB(255, 52, 52, 52),
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
         ),
       ),
-      body: SafeArea(
-        child: FutureBuilder<void>(
-          future: _initializeControllerFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return Stack(
-                children: [
-                  // Camera Preview
-                  if (_cameraController != null && _cameraController!.value.isInitialized)
-                    CameraPreview(_cameraController!),
+      body: FutureBuilder<void>(
+        future: _initializeControllerFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return Stack(
+              children: [
+                // Camera Preview
+                if (_cameraController != null &&
+                    _cameraController!.value.isInitialized)
+                  Positioned.fill(
+                    child: FittedBox(
+                      fit: BoxFit.cover,
+                      child: SizedBox(
+                        width: _cameraController!.value.previewSize!.height,
+                        height: _cameraController!.value.previewSize!.width,
+                        child: CameraPreview(_cameraController!),
+                      ),
+                    ),
+                  ),
 
-                  // Scan Frame Overlay
-                  Center(
-                    child: _isInitialized
-                        ? AnimatedBuilder(
+                // Scan Frame Overlay
+                Center(
+                  child:
+                      _isInitialized
+                          ? AnimatedBuilder(
                             animation: _animationController,
                             builder: (context, child) {
                               return Container(
@@ -321,21 +336,30 @@ class _ScanScreenState extends State<ScanScreen>
                                               decoration: BoxDecoration(
                                                 border: Border(
                                                   top: BorderSide(
-                                                    color: const Color(
-                                                        0xFF4A9FB5),
-                                                    width: 3,
+                                                    color: const Color.fromARGB(
+                                                      255,
+                                                      249,
+                                                      193,
+                                                      150,
+                                                    ),
+                                                    width: 1,
                                                   ),
                                                   left: BorderSide(
-                                                    color: const Color(
-                                                        0xFF4A9FB5),
-                                                    width: 3,
+                                                    color: const Color.fromARGB(
+                                                      255,
+                                                      249,
+                                                      193,
+                                                      150,
+                                                    ),
+                                                    width: 1,
                                                   ),
                                                 ),
                                                 borderRadius:
                                                     const BorderRadius.only(
-                                                  topLeft:
-                                                      Radius.circular(12),
-                                                ),
+                                                      topLeft: Radius.circular(
+                                                        12,
+                                                      ),
+                                                    ),
                                               ),
                                             ),
                                             Container(
@@ -344,21 +368,30 @@ class _ScanScreenState extends State<ScanScreen>
                                               decoration: BoxDecoration(
                                                 border: Border(
                                                   top: BorderSide(
-                                                    color: const Color(
-                                                        0xFF4A9FB5),
-                                                    width: 3,
+                                                    color: const Color.fromARGB(
+                                                      255,
+                                                      249,
+                                                      193,
+                                                      150,
+                                                    ),
+                                                    width: 1,
                                                   ),
                                                   right: BorderSide(
-                                                    color: const Color(
-                                                        0xFF4A9FB5),
-                                                    width: 3,
+                                                    color: const Color.fromARGB(
+                                                      255,
+                                                      249,
+                                                      193,
+                                                      150,
+                                                    ),
+                                                    width: 1,
                                                   ),
                                                 ),
                                                 borderRadius:
                                                     const BorderRadius.only(
-                                                  topRight:
-                                                      Radius.circular(12),
-                                                ),
+                                                      topRight: Radius.circular(
+                                                        12,
+                                                      ),
+                                                    ),
                                               ),
                                             ),
                                           ],
@@ -373,21 +406,29 @@ class _ScanScreenState extends State<ScanScreen>
                                               decoration: BoxDecoration(
                                                 border: Border(
                                                   bottom: BorderSide(
-                                                    color: const Color(
-                                                        0xFF4A9FB5),
-                                                    width: 3,
+                                                    color: const Color.fromARGB(
+                                                      255,
+                                                      249,
+                                                      193,
+                                                      150,
+                                                    ),
+                                                    width: 1,
                                                   ),
                                                   left: BorderSide(
-                                                    color: const Color(
-                                                        0xFF4A9FB5),
-                                                    width: 3,
+                                                    color: const Color.fromARGB(
+                                                      255,
+                                                      249,
+                                                      193,
+                                                      150,
+                                                    ),
+                                                    width: 1,
                                                   ),
                                                 ),
                                                 borderRadius:
                                                     const BorderRadius.only(
-                                                  bottomLeft:
-                                                      Radius.circular(12),
-                                                ),
+                                                      bottomLeft:
+                                                          Radius.circular(12),
+                                                    ),
                                               ),
                                             ),
                                             Container(
@@ -396,21 +437,29 @@ class _ScanScreenState extends State<ScanScreen>
                                               decoration: BoxDecoration(
                                                 border: Border(
                                                   bottom: BorderSide(
-                                                    color: const Color(
-                                                        0xFF4A9FB5),
-                                                    width: 3,
+                                                    color: const Color.fromARGB(
+                                                      255,
+                                                      249,
+                                                      193,
+                                                      150,
+                                                    ),
+                                                    width: 1,
                                                   ),
                                                   right: BorderSide(
-                                                    color: const Color(
-                                                        0xFF4A9FB5),
-                                                    width: 3,
+                                                    color: const Color.fromARGB(
+                                                      255,
+                                                      249,
+                                                      193,
+                                                      150,
+                                                    ),
+                                                    width: 1,
                                                   ),
                                                 ),
                                                 borderRadius:
                                                     const BorderRadius.only(
-                                                  bottomRight:
-                                                      Radius.circular(12),
-                                                ),
+                                                      bottomRight:
+                                                          Radius.circular(12),
+                                                    ),
                                               ),
                                             ),
                                           ],
@@ -429,23 +478,27 @@ class _ScanScreenState extends State<ScanScreen>
                                             begin: Alignment.topCenter,
                                             end: Alignment.bottomCenter,
                                             colors: [
-                                              const Color(0xFF4A9FB5)
-                                                  .withValues(alpha: 0),
-                                              const Color(0xFF4A9FB5)
-                                                  .withValues(alpha: 0.15),
-                                              const Color(0xFF4A9FB5)
-                                                  .withValues(alpha: 0.4),
-                                              const Color(0xFF4A9FB5)
-                                                  .withValues(alpha: 0.15),
-                                              const Color(0xFF4A9FB5)
-                                                  .withValues(alpha: 0),
+                                              const Color(
+                                                0xFF8B5E3C,
+                                              ).withValues(alpha: 0),
+                                              const Color(
+                                                0xFF8B5E3C,
+                                              ).withValues(alpha: 0.15),
+                                              const Color(
+                                                0xFF8B5E3C,
+                                              ).withValues(alpha: 0.4),
+                                              const Color(
+                                                0xFF8B5E3C,
+                                              ).withValues(alpha: 0.15),
+                                              const Color(
+                                                0xFF8B5E3C,
+                                              ).withValues(alpha: 0),
                                             ],
                                             stops: const [0, 0.2, 0.5, 0.8, 1],
                                           ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: const Color(0xFF4A9FB5)
-                                                  .withValues(alpha: 0.2),
+                                              color: const Color.fromARGB(255, 245, 231, 221).withValues(alpha: 0.2),
                                               blurRadius: 6,
                                               spreadRadius: 1,
                                             ),
@@ -458,55 +511,60 @@ class _ScanScreenState extends State<ScanScreen>
                               );
                             },
                           )
-                        : Container(
+                          : Container(
                             width: 280,
                             height: 280,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
                             ),
                           ),
-                  ),
+                ),
 
-                  if (_isProcessing)
-                    Positioned.fill(
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-                        child: Container(
-                          color: Colors.black.withValues(alpha: 0.25),
-                        ),
+                if (_isProcessing)
+                  Positioned.fill(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                      child: Container(
+                        color: Colors.black.withValues(alpha: 0.25),
                       ),
                     ),
+                  ),
 
-                  if (_isProcessing)
-                    Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 190,
-                            height: 190,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: const Color(0xFF4A9FB5),
-                                width: 4,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.18),
-                                  blurRadius: 12,
-                                  offset: const Offset(0, 8),
-                                ),
-                              ],
+                if (_isProcessing)
+                  Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 190,
+                          height: 190,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: const Color(0xFF8B5E3C),
+                              width: 4,
                             ),
-                            child: ClipOval(
-                              child: _capturedImage != null
-                                  ? Image.file(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.18),
+                                blurRadius: 12,
+                                offset: const Offset(0, 8),
+                              ),
+                            ],
+                          ),
+                          child: ClipOval(
+                            child:
+                                _capturedImage != null
+                                    ? Image.file(
                                       File(_capturedImage!.path),
                                       fit: BoxFit.cover,
                                       width: 190,
                                       height: 190,
-                                      errorBuilder: (context, error, stackTrace) {
+                                      errorBuilder: (
+                                        context,
+                                        error,
+                                        stackTrace,
+                                      ) {
                                         return const Center(
                                           child: Icon(
                                             Icons.broken_image,
@@ -516,68 +574,68 @@ class _ScanScreenState extends State<ScanScreen>
                                         );
                                       },
                                     )
-                                  : (_cameraController != null && _cameraController!.value.isInitialized
-                                      ? CameraPreview(_cameraController!)
-                                      : const SizedBox.shrink()),
-                            ),
+                                    : (_cameraController != null &&
+                                            _cameraController!
+                                                .value
+                                                .isInitialized
+                                        ? CameraPreview(_cameraController!)
+                                        : const SizedBox.shrink()),
                           ),
-                          const SizedBox(height: 18),
-                          const Text(
-                            'Processing, Please wait...',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
+                        ),
+                        const SizedBox(height: 18),
+                        const Text(
+                          'Processing, Please wait...',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
+                  ),
 
-                  if (!_isProcessing)
-                    Positioned(
-                      bottom: 24,
-                      left: 0,
-                      right: 0,
-                      child: Center(
-                        child: GestureDetector(
-                          onTap: _startProcessing,
-                          child: Container(
-                            width: 80,
-                            height: 80,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF4A9FB5),
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.4),
-                                  blurRadius: 12,
-                                  offset: const Offset(0, 6),
-                                ),
-                              ],
-                            ),
-                            child: const Icon(
-                              Icons.center_focus_strong,
-                              color: Colors.white,
-                              size: 40,
-                            ),
+                if (!_isProcessing)
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: GestureDetector(
+                        onTap: _startProcessing,
+                        child: Container(
+                          width: 68,
+                          height: 68,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF8B5E3C),
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.4),
+                                blurRadius: 12,
+                                offset: const Offset(0, 6),
+                              ),
+                            ],
+                          ),
+                          child: const Icon(
+                            Icons.center_focus_strong,
+                            color: Colors.white,
+                            size: 34,
                           ),
                         ),
                       ),
                     ),
-                ],
-              );
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    Color(0xFF4A9FB5),
                   ),
-                ),
-              );
-            }
-          },
-        ),
+              ],
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF8B5E3C)),
+              ),
+            );
+          }
+        },
       ),
     );
   }

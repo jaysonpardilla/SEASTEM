@@ -56,7 +56,7 @@ class QuizResultScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w800,
-                        color: Color(0xFF123B5D),
+                        color: Color(0xFF3E2B18),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -64,7 +64,7 @@ class QuizResultScreen extends StatelessWidget {
                       'You scored $score out of $totalQuestions.',
                       style: const TextStyle(
                         fontSize: 16,
-                        color: Color(0xFF35627F),
+                        color: Color(0xFF6B4B35),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -72,10 +72,7 @@ class QuizResultScreen extends StatelessWidget {
                     DecoratedBox(
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [
-                            Color.fromARGB(255, 46, 151, 187),
-                            Color.fromARGB(255, 10, 94, 124),
-                          ],
+                          colors: [Color(0xFFB88962), Color(0xFF8B5E3C)],
                         ),
                         borderRadius: BorderRadius.circular(12),
                       ),

@@ -90,17 +90,17 @@ class _QuizScreenState extends State<QuizScreen> {
   Widget build(BuildContext context) {
     final manager = _manager;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       appBar:
           _showResult
               ? null
               : AppBar(
-                backgroundColor: Colors.white,
+                backgroundColor: const Color(0xFFFFFBF6),
                 elevation: 0,
                 centerTitle: true,
                 leading: IconButton(
                   onPressed: _handleBackPressed,
-                  icon: const Icon(Icons.arrow_back, color: Color(0xFF176B87)),
+                  icon: const Icon(Icons.arrow_back, color: Color(0xFF8B5E3C)),
                   tooltip: 'Back to home',
                 ),
                 title:
@@ -109,7 +109,7 @@ class _QuizScreenState extends State<QuizScreen> {
                           'Quiz Result',
                           style: TextStyle(
                             fontSize: 16,
-                            color: Color(0xFF123B5D),
+                            color: Color(0xFF3E2B18),
                             fontWeight: FontWeight.w700,
                           ),
                         )
@@ -130,7 +130,7 @@ class _QuizScreenState extends State<QuizScreen> {
                           Text(
                             '${manager.score}',
                             style: const TextStyle(
-                              color: Color(0xFF123B5D),
+                              color: Color(0xFF3E2B18),
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
                             ),
@@ -155,7 +155,7 @@ class _QuizScreenState extends State<QuizScreen> {
             'Question ${manager.currentIndex + 1} of $total',
             style: const TextStyle(
               fontSize: 16,
-              color: Color(0xFF123B5D),
+              color: Color(0xFF3E2B18),
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -166,8 +166,8 @@ class _QuizScreenState extends State<QuizScreen> {
               value: progress,
               minHeight: 8,
               borderRadius: BorderRadius.circular(8),
-              backgroundColor: const Color(0xFFDCECF4),
-              color: const Color(0xFF176B87),
+              backgroundColor: const Color(0xFFEADBC8),
+              color: const Color(0xFF8B5E3C),
             ),
           ),
         ],
@@ -178,14 +178,14 @@ class _QuizScreenState extends State<QuizScreen> {
   Widget _buildBody(QuizManager? manager) {
     if (_isLoading) {
       return const Center(
-        child: CircularProgressIndicator(color: Color(0xFF176B87)),
+        child: CircularProgressIndicator(color: Color(0xFF8B5E3C)),
       );
     }
     if (_error != null || manager == null) {
       return Center(
         child: Text(
           'Unable to load quiz data.',
-          style: const TextStyle(color: Color(0xFF35627F)),
+          style: const TextStyle(color: Color(0xFF6B4B35)),
         ),
       );
     }
@@ -200,7 +200,7 @@ class _QuizScreenState extends State<QuizScreen> {
     return Center(
       child: FilledButton(
         onPressed: _startRandomQuiz,
-        style: FilledButton.styleFrom(backgroundColor: const Color(0xFF176B87)),
+        style: FilledButton.styleFrom(backgroundColor: const Color(0xFF8B5E3C)),
         child: const Text('Start Quiz'),
       ),
     );
@@ -218,7 +218,7 @@ class _QuizScreenState extends State<QuizScreen> {
             fontSize: 16,
             height: 1.3,
             fontWeight: FontWeight.w700,
-            color: Color(0xFF123B5D),
+            color: Color(0xFF3E2B18),
           ),
         ),
         const SizedBox(height: 30),
@@ -230,10 +230,10 @@ class _QuizScreenState extends State<QuizScreen> {
         FilledButton(
           onPressed: manager.selectedAnswerIndex == null ? null : _nextQuestion,
           style: FilledButton.styleFrom(
-            backgroundColor: const Color(0xFF176B87),
+            backgroundColor: const Color(0xFF8B5E3C),
             foregroundColor: Colors.white,
-            disabledBackgroundColor: const Color(0xFFDCECF4),
-            disabledForegroundColor: const Color(0xFF6D8795),
+            disabledBackgroundColor: const Color(0xFFEADBC8),
+            disabledForegroundColor: const Color(0xFF8B7768),
             padding: const EdgeInsets.symmetric(vertical: 14),
           ),
           child: Text(manager.isLastQuestion ? 'Finish Quiz' : 'Next Question'),
@@ -289,7 +289,7 @@ class _QuizScreenState extends State<QuizScreen> {
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF176B87),
+                  color: Color(0xFF8B5E3C),
                 ),
               ),
             ],
@@ -308,9 +308,9 @@ class _QuizScreenState extends State<QuizScreen> {
             width: double.infinity,
             padding: const EdgeInsets.all(5),
             decoration: BoxDecoration(
-              color: const Color(0xFFF1F8FA),
+              color: const Color(0xFFF0E3D2),
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: const Color(0xFFA9D0DF)),
+              border: Border.all(color: const Color(0xFFD8C2A8)),
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
@@ -354,7 +354,7 @@ class _QuizScreenState extends State<QuizScreen> {
                     String.fromCharCode(65 + index),
                     style: const TextStyle(
                       fontWeight: FontWeight.w800,
-                      color: Color(0xFF176B87),
+                      color: Color(0xFF8B5E3C),
                     ),
                   ),
                   const SizedBox(width: 15),
@@ -362,7 +362,7 @@ class _QuizScreenState extends State<QuizScreen> {
                     child: Text(
                       question.choices[index].displayText,
                       style: const TextStyle(
-                        color: Color(0xFF173F5A),
+                        color: Color(0xFF3E2B18),
                         fontSize: 12,
                       ),
                     ),
@@ -414,8 +414,8 @@ class _ChoiceCard extends StatelessWidget {
                     : correct
                     ? const Color(0xFF0077B6)
                     : selected
-                    ? const Color(0xFF176B87)
-                    : const Color(0xFFA9D0DF),
+                    ? const Color(0xFF8B5E3C)
+                    : const Color(0xFFD8C2A8),
             width: selected || correct || wrong ? 2 : 1,
           ),
           boxShadow:

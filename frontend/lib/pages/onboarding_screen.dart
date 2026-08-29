@@ -89,7 +89,7 @@ class OnboardingScreen extends StatelessWidget {
                   Text(
                     'Discover the world of sea shells',
                     style: const TextStyle(
-                      color: Color.fromARGB(255, 74, 156, 239),
+                      color: Color(0xFFF0D2A8),
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
                       height: 0.9,
@@ -113,7 +113,7 @@ class OnboardingScreen extends StatelessWidget {
                             text:
                                 'Identify seashells instantly with AI, explore detailed species information, and discover the beauty of marine life.',
                             style: const TextStyle(
-                              backgroundColor: Color.fromARGB(255, 191, 233, 255),
+                              backgroundColor: Color(0xFFF0E3D2),
                             ),
                           ),
                         ],
@@ -168,7 +168,7 @@ class OnboardingScreen extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 2, 56, 91),
+                          color: Color.fromARGB(255, 255, 229, 204),
                         ),
                       ),
                     ),
@@ -189,7 +189,7 @@ class _SunRaysPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width * 0.22, size.height * 0.24);
-    final rayPaint = Paint()..color = const Color.fromARGB(255, 122, 217, 255).withOpacity(0.11);
+    final rayPaint = Paint()..color = const Color.fromARGB(255, 255, 216, 143).withOpacity(0.11);
     final rayAngles = [-0.55, -0.2, 0.15, 0.5, 0.85, 1.2];
 
     for (var index = 0; index < rayAngles.length; index++) {
@@ -209,7 +209,7 @@ class _SunRaysPainter extends CustomPainter {
     canvas.drawCircle(
       center,
       45,
-      Paint()..color = const Color.fromARGB(255, 18, 61, 142).withOpacity(0.2),
+      Paint()..color = const Color.fromARGB(255, 219, 172, 78).withOpacity(0.2),
     );
   }
 
@@ -287,9 +287,8 @@ class _GlowingButtonState extends State<_GlowingButton>
           borderRadius: BorderRadius.circular(32),
           gradient: const LinearGradient(
             colors: [
-              Color.fromARGB(255, 191, 233, 255),
-              Color.fromARGB(255, 39, 90, 141),
-            ],
+              Color.fromARGB(255, 250, 219, 180),
+              Color.fromARGB(255, 123, 96, 20)],
           ),
           boxShadow: [
             BoxShadow(

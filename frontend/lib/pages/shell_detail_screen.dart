@@ -26,9 +26,9 @@ class ShellDetailScreen extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF1F8FA),
+        color: const Color(0xFFF0E3D2),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFA9D0DF)),
+        border: Border.all(color: const Color(0xFFD8C2A8)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +38,7 @@ class ShellDetailScreen extends StatelessWidget {
             style: const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w700,
-              color: Color(0xFF24627D),
+              color: Color(0xFF6B4B35),
             ),
           ),
           const SizedBox(height: 6),
@@ -47,7 +47,7 @@ class ShellDetailScreen extends StatelessWidget {
             style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF173F5A),
+              color: Color(0xFF3E2B18),
               height: 1.4,
             ),
           ),
@@ -58,45 +58,76 @@ class ShellDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rawJson = shell['data'] is Map ? shell['data'] as Map<String, dynamic> : shell;
-    final basic = Map<String, dynamic>.from(rawJson['basic_identification'] is Map ? rawJson['basic_identification'] as Map : {});
-    final appearance = Map<String, dynamic>.from(rawJson['appearance'] is Map ? rawJson['appearance'] as Map : {});
-    final habitat = Map<String, dynamic>.from(rawJson['habitat'] is Map ? rawJson['habitat'] as Map : {});
-    final edibility = Map<String, dynamic>.from(rawJson['edibility_and_safety'] is Map ? rawJson['edibility_and_safety'] as Map : {});
-    final similarSpecies = (rawJson['similar_species'] is List ? rawJson['similar_species'] as List : []).map((e) => e.toString()).toList();
+    final rawJson =
+        shell['data'] is Map ? shell['data'] as Map<String, dynamic> : shell;
+    final basic = Map<String, dynamic>.from(
+      rawJson['basic_identification'] is Map
+          ? rawJson['basic_identification'] as Map
+          : {},
+    );
+    final appearance = Map<String, dynamic>.from(
+      rawJson['appearance'] is Map ? rawJson['appearance'] as Map : {},
+    );
+    final habitat = Map<String, dynamic>.from(
+      rawJson['habitat'] is Map ? rawJson['habitat'] as Map : {},
+    );
+    final edibility = Map<String, dynamic>.from(
+      rawJson['edibility_and_safety'] is Map
+          ? rawJson['edibility_and_safety'] as Map
+          : {},
+    );
+    final similarSpecies =
+        (rawJson['similar_species'] is List
+                ? rawJson['similar_species'] as List
+                : [])
+            .map((e) => e.toString())
+            .toList();
 
-    final imagePath = _resolveAssetPath(rawJson['image_path'] ?? shell['image'] ?? 'lib/assets/images/logo.png');
-    final commonName = _safeString(basic['common_name'] ?? shell['name'] ?? 'Unknown shell');
+    final imagePath = _resolveAssetPath(
+      rawJson['image_path'] ?? shell['image'] ?? 'lib/assets/images/logo.png',
+    );
+    final commonName = _safeString(
+      basic['common_name'] ?? shell['name'] ?? 'Unknown shell',
+    );
     final scientificName = _safeString(basic['scientific_name'] ?? 'Unknown');
     final family = _safeString(basic['family'] ?? 'Unknown');
     final genus = _safeString(basic['genus'] ?? 'Unknown');
-    final classification = _safeString(basic['classification'] ?? shell['category'] ?? 'Unknown');
+    final classification = _safeString(
+      basic['classification'] ?? shell['category'] ?? 'Unknown',
+    );
     final shellShape = _safeString(appearance['shell_shape'] ?? 'Unknown');
     final shellColor = _safeString(appearance['shell_color'] ?? 'Unknown');
     final pattern = _safeString(appearance['pattern'] ?? 'Unknown');
-    final surfaceTexture = _safeString(appearance['surface_texture'] ?? 'Unknown');
+    final surfaceTexture = _safeString(
+      appearance['surface_texture'] ?? 'Unknown',
+    );
     final size = _safeString(appearance['size'] ?? 'Unknown');
-    final distinctiveMarkings = _safeString(appearance['distinctive_markings'] ?? 'Unknown');
-
+    final distinctiveMarkings = _safeString(
+      appearance['distinctive_markings'] ?? 'Unknown',
+    );
     final habitatType = _safeString(habitat['habitat_type'] ?? 'Unknown');
     final waterType = _safeString(habitat['water_type'] ?? 'Unknown');
     final depthRange = _safeString(habitat['depth_range'] ?? 'Unknown');
-    final geographicDistribution = _safeString(habitat['geographic_distribution'] ?? 'Unknown');
-    final typicalEnvironment = _safeString(habitat['typical_environment'] ?? 'Unknown');
+    final geographicDistribution = _safeString(
+      habitat['geographic_distribution'] ?? 'Unknown',
+    );
+    final typicalEnvironment = _safeString(
+      habitat['typical_environment'] ?? 'Unknown',
+    );
 
     final edibilityStatus = _safeString(edibility['edibility'] ?? 'Unknown');
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromARGB(255, 255, 255, 254),
         elevation: 0,
-        iconTheme: const IconThemeData(color: Color(0xFF176B87)),
+        iconTheme: const IconThemeData(color: Color(0xFF8B5E3C)),
         centerTitle: true,
         title: const Text(
           'View shell Details',
           style: TextStyle(
-            color: Color(0xFF123B5D),
+            color: Color(0xFF3E2B18),
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
@@ -114,9 +145,9 @@ class ShellDetailScreen extends StatelessWidget {
                   height: 220,
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: const Color(0xFFFFFBF6),
                     borderRadius: BorderRadius.circular(28),
-                    border: Border.all(color: const Color(0xFFA9D0DF)),
+                    border: Border.all(color: const Color(0xFFD8C2A8)),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.05),
@@ -141,18 +172,14 @@ class ShellDetailScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              const Divider(
-                color: Color(0xFFA9D0DF),
-                thickness: 1,
-                height: 1,
-              ),
+              const Divider(color: Color(0xFFD8C2A8), thickness: 1, height: 1),
               const SizedBox(height: 18),
               Text(
                 commonName,
                 style: const TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF123B5D),
+                  color: Color(0xFF3E2B18),
                 ),
               ),
               const SizedBox(height: 6),
@@ -161,7 +188,7 @@ class ShellDetailScreen extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 14,
                   fontStyle: FontStyle.italic,
-                  color: Color(0xFF24627D),
+                  color: Color(0xFF6B4B35),
                 ),
               ),
               const SizedBox(height: 16),
@@ -176,14 +203,18 @@ class ShellDetailScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 20),
-              _buildInfoTile('Habitat',
-                  'Type: $habitatType\nWater type: $waterType\nDepth: $depthRange\nDistribution: $geographicDistribution\nEnvironment: $typicalEnvironment'),
+              _buildInfoTile(
+                'Habitat',
+                'Type: $habitatType\nWater type: $waterType\nDepth: $depthRange\nDistribution: $geographicDistribution\nEnvironment: $typicalEnvironment',
+              ),
               const SizedBox(height: 12),
 
-              _buildInfoTile('Appearance',
-                  'Shape: $shellShape\nColor: $shellColor\nPattern: $pattern\nTexture: $surfaceTexture\nSize: $size\nDistinctive markings: $distinctiveMarkings'),
+              _buildInfoTile(
+                'Appearance',
+                'Shape: $shellShape\nColor: $shellColor\nPattern: $pattern\nTexture: $surfaceTexture\nSize: $size\nDistinctive markings: $distinctiveMarkings',
+              ),
               const SizedBox(height: 12),
-              
+
               if (similarSpecies.isNotEmpty)
                 _buildInfoTile('Similar species', similarSpecies.join(', ')),
             ],
@@ -197,7 +228,7 @@ class ShellDetailScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
       decoration: BoxDecoration(
-        color: const Color(0xFFDCECF4),
+        color: const Color.fromARGB(255, 236, 224, 208),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
@@ -205,7 +236,7 @@ class ShellDetailScreen extends StatelessWidget {
         style: const TextStyle(
           fontSize: 11,
           fontWeight: FontWeight.w600,
-          color: Color(0xFF35627F),
+          color: Color(0xFF6B4B35),
         ),
       ),
     );

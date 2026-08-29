@@ -8,9 +8,9 @@ class BottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color activeColor = const Color(0xFF176B87);
-    final Color inactiveColor = const Color(0xFF6D8795);
-    final Color highlightColor = const Color(0xFF2F86A5);
+    final Color activeColor = Theme.of(context).colorScheme.primary;
+    final Color inactiveColor = const Color(0xFF8B7768);
+    final Color highlightColor = const Color.fromARGB(255, 214, 155, 106);
 
     Widget buildItem({
       required IconData icon,
@@ -39,7 +39,7 @@ class BottomNav extends StatelessWidget {
                   decoration: BoxDecoration(
                     color:
                         isActive
-                            ? highlightColor.withValues(alpha: 0.18)
+                            ? highlightColor.withValues(alpha: 0.30)
                             : Colors.transparent,
                     shape: BoxShape.circle,
                   ),
@@ -72,9 +72,7 @@ class BottomNav extends StatelessWidget {
     return Container(
       height: 65,
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: const BoxDecoration(
-        color: Color.fromARGB(255, 255, 255, 255),
-      ),
+      decoration: const BoxDecoration(color: Colors.white),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

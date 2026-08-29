@@ -6,9 +6,7 @@ import 'pages/onboarding_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -21,8 +19,32 @@ class MyApp extends StatelessWidget {
       title: 'Seashells',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4EA7A1)),
+        scaffoldBackgroundColor: const Color(0xFFF8F1E7),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF8B5E3C),
+          brightness: Brightness.light,
+        ).copyWith(
+          primary: const Color(0xFF8B5E3C),
+          onPrimary: Colors.white,
+          secondary: const Color(0xFFB88962),
+          surface: const Color(0xFFFFFBF6),
+          onSurface: const Color(0xFF3E2B18),
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFFFFFBF6),
+          foregroundColor: Color(0xFF3E2B18),
+          elevation: 0,
+        ),
+        navigationBarTheme: const NavigationBarThemeData(
+          backgroundColor: Color(0xFFFFFBF6),
+          indicatorColor: Color(0xFFEADBC8),
+          labelTextStyle: WidgetStatePropertyAll(
+            TextStyle(color: Color(0xFF3E2B18)),
+          ),
+        ),
+        progressIndicatorTheme: const ProgressIndicatorThemeData(
+          color: Color(0xFF8B5E3C),
+        ),
         textTheme: ThemeData.light().textTheme.apply(
           fontFamily: 'Roboto',
           bodyColor: const Color(0xFF3E2F2F),

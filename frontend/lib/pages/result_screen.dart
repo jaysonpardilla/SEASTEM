@@ -33,9 +33,9 @@ class ResultScreen extends StatelessWidget {
           ..sort((a, b) => b.value.compareTo(a.value));
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF8F1E7),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFFFFBF6),
         elevation: 0,
         centerTitle: true,
         title: const Text(
@@ -61,7 +61,7 @@ class ResultScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.black,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFF4A9FB5), width: 3),
+                  border: Border.all(color: const Color(0xFF8B5E3C), width: 3),
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(9),
@@ -90,7 +90,7 @@ class ResultScreen extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF0F0F0),
+                  color: const Color(0xFFF0E3D2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
@@ -114,7 +114,7 @@ class ResultScreen extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF4A9FB5),
+                            color: Color(0xFF8B5E3C),
                           ),
                         ),
                       ],
@@ -230,7 +230,7 @@ class ResultScreen extends StatelessWidget {
                                             : FontWeight.w600,
                                     color:
                                         isTopResult
-                                            ? const Color(0xFF4A9FB5)
+                                            ? const Color(0xFF8B5E3C)
                                             : const Color(0xFF7B5A3B),
                                   ),
                                 ),
@@ -245,8 +245,8 @@ class ResultScreen extends StatelessWidget {
                                 backgroundColor: Colors.grey.shade200,
                                 valueColor: AlwaysStoppedAnimation<Color>(
                                   isTopResult
-                                      ? const Color(0xFF4A9FB5)
-                                      : const Color(0xFFB8D4DB),
+                                      ? const Color(0xFF8B5E3C)
+                                      : const Color(0xFFD8C2A8),
                                 ),
                               ),
                             ),
@@ -273,7 +273,7 @@ class ResultScreen extends StatelessWidget {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF4A9FB5),
+                        backgroundColor: const Color(0xFF8B5E3C),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -302,7 +302,7 @@ class ResultScreen extends StatelessWidget {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF4A9FB5),
+                        backgroundColor: const Color(0xFF8B5E3C),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),

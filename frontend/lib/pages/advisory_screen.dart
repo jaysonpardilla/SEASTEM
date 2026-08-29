@@ -19,7 +19,7 @@ class AdvisoryScreen extends StatefulWidget {
 }
 
 class _AdvisoryScreenState extends State<AdvisoryScreen> {
-  static const _defaultBackendUrl = 'http://10.0.0.77:8000';
+  static const _defaultBackendUrl = 'https://seastem.up.railway.app';
   static const _backendUrl = String.fromEnvironment(
     'BACKEND_URL',
     defaultValue: _defaultBackendUrl,
@@ -46,8 +46,8 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
   String get _baseUrl {
     if (_backendUrl.trim().isNotEmpty) return _backendUrl;
     return Platform.isAndroid
-        ? 'http://10.0.0.77:8000'
-        : 'http://localhost:8000';
+        ? 'https://seastem.up.railway.app'
+        : 'https://seastem.up.railway.app';
   }
 
   Uri get _apiUri => Uri.parse('$_baseUrl/api/advisories/shellfish/');
@@ -180,7 +180,8 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
         _syncRunning = isSyncRunning;
         _syncStatusMessage =
             isSyncRunning
-                ? (syncInfo['error'] ?? 'BFAR sync is already running. Please wait.')
+                ? (syncInfo['error'] ??
+                    'BFAR sync is already running. Please wait.')
                 : null;
         _advisory = payload['advisory'] as Map<String, dynamic>?;
         _lastUpdated = payload['last_updated'] as String?;
@@ -198,10 +199,10 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
         });
       }
 
-      if (response.statusCode >= 400 && payload['advisory'] == null && !isSyncRunning) {
-        throw Exception(
-          syncInfo['error'] ?? 'No advisory is available yet.',
-        );
+      if (response.statusCode >= 400 &&
+          payload['advisory'] == null &&
+          !isSyncRunning) {
+        throw Exception(syncInfo['error'] ?? 'No advisory is available yet.');
       }
 
       final preferences = await SharedPreferences.getInstance();
@@ -355,7 +356,7 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const navy = Color(0xFF123B5D);
+    const navy = Color(0xFF3E2B18);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -368,10 +369,10 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
             color: navy,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         elevation: 0,
         titleSpacing: 0,
-        iconTheme: const IconThemeData(color: Color(0xFF176B87)),
+        iconTheme: const IconThemeData(color: Color(0xFF8B5E3C)),
         leading:
             widget.onBackPressed == null
                 ? null
@@ -455,7 +456,7 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFFE1F1F3),
+            color: const Color(0xFFEADBC8),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -485,9 +486,9 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
         Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: const Color(0xFFFFFBF6),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFFD7E6E9)),
+            border: Border.all(color: const Color(0xFFD8C2A8)),
           ),
           child: Row(
             children: [
@@ -559,14 +560,14 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFFFFFBF6),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFD7E6E9)),
+        border: Border.all(color: const Color(0xFFD8C2A8)),
       ),
       child: Column(
         children: [
           Container(
-            color: const Color(0xFFEAF4F5),
+            color: const Color(0xFFF0E3D2),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
             child: Row(
               children: [
@@ -615,7 +616,7 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
                   vertical: 14,
                 ),
                 decoration: const BoxDecoration(
-                  border: Border(top: BorderSide(color: Color(0xFFE4EEF0))),
+                  border: Border(top: BorderSide(color: Color(0xFFE6D8C8))),
                 ),
                 child: Row(
                   children: [
