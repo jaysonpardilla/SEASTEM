@@ -17,30 +17,17 @@ class ResultScreen extends StatelessWidget {
     final imageFile = File(scanResult.imageUrl);
     final confidenceLabel =
         '${(scanResult.confidence * 100).toStringAsFixed(1)}%';
-    final probabilities = <String, double>{};
-    final rawProbabilities = scanResult.rawResponse['probabilities'];
-
-    if (rawProbabilities is Map) {
-      for (final entry in rawProbabilities.entries) {
-        final key = entry.key.toString();
-        final value =
-            entry.value is num ? (entry.value as num).toDouble() : 0.0;
-        probabilities[key] = value;
-      }
-    }
-
-    final sortedProbabilities =
-        probabilities.entries.toList()
-          ..sort((a, b) => b.value.compareTo(a.value));
+    final isRecognized = scanResult.confidence >= 0.60;
+    final displayedClassName = isRecognized ? scanResult.label : 'Unrecognized';
     final shellReference = shellReferenceFor(
       scanResult.prediction,
       scanResult.label,
     );
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F1E7),
+      backgroundColor: const Color.fromARGB(255, 251, 251, 251),
       appBar: AppBar(
-        backgroundColor: const Color(0xFFFFFBF6),
+        backgroundColor: const Color.fromARGB(255, 255, 241, 225),
         elevation: 0,
         centerTitle: true,
         title: const Text(
@@ -106,7 +93,7 @@ class ResultScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            scanResult.label,
+                            displayedClassName,
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
@@ -114,60 +101,36 @@ class ResultScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Text(
-                          confidenceLabel,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF8B5E3C),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        const Text(
-                          'Prediction result:',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xFF7B5A3B),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFFFBF6),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: const Color(0xFFD8C2A8)),
                           ),
-                        ),
-                        const SizedBox(width: 4),
-                        Expanded(
-                          child: Text(
-                            scanResult.prediction,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF3E2B18),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        const Text(
-                          'File',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xFF7B5A3B),
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        Expanded(
-                          child: Text(
-                            scanResult.filename,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF3E2B18),
-                            ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              const Text(
+                                'Confidence',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF7B5A3B),
+                                ),
+                              ),
+                              Text(
+                                confidenceLabel,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF8B5E3C),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -177,97 +140,10 @@ class ResultScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
-              if (shellReference != null) ...[
+              if (isRecognized && shellReference != null) ...[
                 _buildReferenceSection(shellReference),
                 const SizedBox(height: 24),
               ],
-
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF8F8F8),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFFDEE7E9)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Class confidence',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF3E2B18),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    ...sortedProbabilities.map((entry) {
-                      final percent = (entry.value * 100).toStringAsFixed(1);
-                      final isTopResult =
-                          entry.key == scanResult.prediction ||
-                          entry.key.toLowerCase() ==
-                              scanResult.label.toLowerCase();
-
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    entry.key,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight:
-                                          isTopResult
-                                              ? FontWeight.w700
-                                              : FontWeight.w500,
-                                      color: const Color(0xFF3E2B18),
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  '$percent%',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight:
-                                        isTopResult
-                                            ? FontWeight.w700
-                                            : FontWeight.w600,
-                                    color:
-                                        isTopResult
-                                            ? const Color(0xFF8B5E3C)
-                                            : const Color(0xFF7B5A3B),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: LinearProgressIndicator(
-                                value: entry.value.clamp(0.0, 1.0),
-                                minHeight: 8,
-                                backgroundColor: Colors.grey.shade200,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  isTopResult
-                                      ? const Color(0xFF8B5E3C)
-                                      : const Color(0xFFD8C2A8),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
 
               // Action Buttons
               Row(
@@ -357,16 +233,6 @@ class ResultScreen extends StatelessWidget {
               color: Color(0xFF3E2B18),
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            reference.scientificName,
-            style: const TextStyle(
-              fontSize: 14,
-              fontStyle: FontStyle.italic,
-              color: Color(0xFF6B4B35),
-            ),
-          ),
-          const SizedBox(height: 16),
           _referenceItem('Main habitat and where found', reference.habitat),
           const SizedBox(height: 12),
           _referenceItem('Edibility', reference.edibility),
@@ -392,6 +258,7 @@ class ResultScreen extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           value,
+          textAlign: TextAlign.justify,
           style: const TextStyle(
             fontSize: 13,
             height: 1.4,

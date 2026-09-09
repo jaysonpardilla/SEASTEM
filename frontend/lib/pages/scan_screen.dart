@@ -24,7 +24,7 @@ class ScanScreen extends StatefulWidget {
 
 class _ScanScreenState extends State<ScanScreen>
     with SingleTickerProviderStateMixin {
-  static const String _defaultBackendUrl = 'sistem1-production.up.railway.app';
+  static const String _defaultBackendUrl = 'https://sistem1-production.up.railway.app';
   static const String _backendUrlOverride = String.fromEnvironment(
     'BACKEND_URL',
     defaultValue: _defaultBackendUrl,
