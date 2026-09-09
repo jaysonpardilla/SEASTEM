@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../models/scan_result.dart';
+import '../models/shell_reference.dart';
 import 'home_screen.dart';
 import 'scan_screen.dart';
 
@@ -31,6 +32,10 @@ class ResultScreen extends StatelessWidget {
     final sortedProbabilities =
         probabilities.entries.toList()
           ..sort((a, b) => b.value.compareTo(a.value));
+    final shellReference = shellReferenceFor(
+      scanResult.prediction,
+      scanResult.label,
+    );
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F1E7),
@@ -171,6 +176,11 @@ class ResultScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
+
+              if (shellReference != null) ...[
+                _buildReferenceSection(shellReference),
+                const SizedBox(height: 24),
+              ],
 
               Container(
                 width: double.infinity,
@@ -324,6 +334,71 @@ class ResultScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildReferenceSection(ShellReference reference) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFFBF6),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFD8C2A8)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'About this species',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF3E2B18),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            reference.scientificName,
+            style: const TextStyle(
+              fontSize: 14,
+              fontStyle: FontStyle.italic,
+              color: Color(0xFF6B4B35),
+            ),
+          ),
+          const SizedBox(height: 16),
+          _referenceItem('Main habitat and where found', reference.habitat),
+          const SizedBox(height: 12),
+          _referenceItem('Edibility', reference.edibility),
+          const SizedBox(height: 12),
+          _referenceItem('Safety awareness', reference.safety),
+        ],
+      ),
+    );
+  }
+
+  Widget _referenceItem(String title, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF6B4B35),
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 13,
+            height: 1.4,
+            color: Color(0xFF3E2B18),
+          ),
+        ),
+      ],
     );
   }
 }

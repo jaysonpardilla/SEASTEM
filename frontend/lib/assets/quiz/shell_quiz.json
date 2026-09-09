@@ -1108,6 +1108,168 @@
             "Scaphopods"
           ],
           "answer_index": 0
+        },
+          {
+            "id": 52, "type": "text_choice",
+            "question": "Why are mangrove forests important habitats for many mollusks?",
+            "question_image_name": "mangrove_habitat.jpg",
+            "question_image_path": "lib/assets/quiz/images/mangrove_habitat.jpg",
+            "choices": ["They provide food and shelter", "They contain only freshwater", "They are always covered by ice", "They have no sediment"],
+            "answer_index": 0
+        },
+        {
+            "id": 53, "type": "text_choice",
+            "question": "What is a major challenge for mollusks living in the intertidal zone?",
+            "question_image_name": "intertidal_zone.jpg",
+            "question_image_path": "lib/assets/quiz/images/intertidal_zone.jpg",
+            "choices": ["Permanent darkness", "Regular exposure to air and changing conditions", "Constant freezing", "Lack of any water movement"],
+            "answer_index": 1
+        },
+        {
+            "id": 54, "type": "text_choice",
+            "question": "Why are seagrass beds valuable habitats for some shellfish?",
+            "question_image_name": "seagrass_bed.jpg",
+            "question_image_path": "lib/assets/quiz/images/seagrass_bed.jpg",
+            "choices": ["They are made entirely of coral", "They contain no living organisms", "They provide shelter and feeding areas", "They occur only in freshwater rivers"],
+            "answer_index": 2
+        },
+        {
+            "id": 55, "type": "text_choice",
+            "question": "Which bottom type is suitable for many burrowing clams?",
+            "question_image_name": "muddy_seafloor.jpg",
+            "question_image_path": "lib/assets/quiz/images/muddy_seafloor.jpg",
+            "choices": ["Dry forest soil", "Frozen ground", "Solid granite cliffs only", "Soft sand or mud"],
+            "answer_index": 3
+        },
+        {
+            "id": 56, "type": "text_choice",
+            "question": "Why is salinity important to marine mollusks?",
+            "question_image_name": "marine_salinity.jpg",
+            "question_image_path": "lib/assets/quiz/images/marine_salinity.jpg",
+            "choices": ["Their bodies are adapted to particular salt concentrations", "Salinity determines the shell's color only", "They need completely salt-free water", "They cannot live near water"],
+            "answer_index": 0
+        },
+        {
+            "id": 57, "type": "text_choice",
+            "question": "Which habitat is especially suitable for many rock-attached mussels?",
+            "question_image_name": "rocky_shore_mussels.jpg",
+            "question_image_path": "lib/assets/quiz/images/rocky_shore_mussels.jpg",
+            "choices": ["Desert dunes", "Rocky coastal shores", "Mountain grasslands", "Ice-covered lakes"],
+            "answer_index": 1
+        },
+        {
+            "id": 58, "type": "text_choice",
+            "question": "What do complex coral reef structures provide for reef-associated mollusks?",
+            "question_image_name": "coral_reef_habitat.jpg",
+            "question_image_path": "lib/assets/quiz/images/coral_reef_habitat.jpg",
+            "choices": ["Permanent land surfaces", "Only freshwater", "Food sources and places for shelter", "Frozen shelter"],
+            "answer_index": 2
+        },
+
+        {
+            "id": 59, "type": "text_choice",
+            "question": "Why is proper handling important when preparing edible shellfish?",
+            "question_image_name": "shellfish_food_safety.jpg",
+            "question_image_path": "lib/assets/quiz/images/shellfish_food_safety.jpg",
+            "choices": ["It helps reduce the risk of foodborne illness", "It changes the shellfish into a different species", "It removes the shell permanently", "It makes all shellfish safe regardless of source"],
+            "answer_index": 0
+        },
+        {
+            "id": 60, "type": "text_choice",
+            "question": "Which shellfish is widely cultivated in coastal aquaculture?",
+            "question_image_name": "oyster_aquaculture.jpg",
+            "question_image_path": "lib/assets/quiz/images/oyster_aquaculture.jpg",
+            "choices": ["Cone snail", "Cowrie", "Nautilus", "Oyster"],
+            "answer_index": 3
+        },
+        {
+            "id": 61, "type": "text_choice",
+            "question": "What is a major food-safety concern when shellfish come from polluted waters?",
+            "question_image_name": "polluted_shellfish_water.jpg",
+            "question_image_path": "lib/assets/quiz/images/polluted_shellfish_water.jpg",
+            "choices": ["They may accumulate harmful microorganisms or contaminants", "Their shells automatically disappear", "They become freshwater animals", "They can no longer filter water"],
+            "answer_index": 0
+        },
+        {
+            "id": 62, "type": "text_choice",
+            "question": "Why should shellfish harvesting closures be followed?",
+            "question_image_name": "shellfish_harvest_closure.jpg",
+            "question_image_path": "lib/assets/quiz/images/shellfish_harvest_closure.jpg",
+            "choices": ["They make shellfish grow faster", "They identify every shell species", "They help prevent people from collecting potentially unsafe shellfish", "They increase seawater salinity"],
+            "answer_index": 2
+        },
+        {
+            "id": 63, "type": "text_choice",
+            "question": "Which edible mollusk is a gastropod rather than a bivalve?",
+            "question_image_name": "abalone_food.jpg",
+            "question_image_path": "lib/assets/quiz/images/abalone_food.jpg",
+            "choices": ["Clam", "Mussel", "Oyster", "Abalone"],
+            "answer_index": 3
+        },
+        {
+            "id": 64, "type": "text_choice",
+            "question": "Which shellfish is commonly prepared by steaming or cooking in seafood dishes?",
+            "question_image_name": "cooked_mussels.jpg",
+            "question_image_path": "lib/assets/quiz/images/cooked_mussels.jpg",
+            "choices": ["Mussels", "Cowries", "Cone snails", "Nautiluses"],
+            "answer_index": 0
+        },
+        {
+            "id": 65, "type": "text_choice",
+            "question": "Why can wild shellfish be unsafe even when they look normal?",
+            "question_image_name": "shellfish_safety_warning.jpg",
+            "question_image_path": "lib/assets/quiz/images/shellfish_safety_warning.jpg",
+            "choices": ["Healthy shellfish always glow", "Harmful microbes or toxins may not be visible", "Their shells show every contaminant", "All wild shellfish are poisonous"],
+            "answer_index": 1
+        },
+
+        {
+            "id": 66, "type": "text_choice",
+            "question": "What is the main function of the hinge in a bivalve shell?",
+            "question_image_name": "bivalve_hinge.jpg",
+            "question_image_path": "lib/assets/quiz/images/bivalve_hinge.jpg",
+            "choices": ["It produces seawater", "It forms the animal's tentacles", "It connects the two valves and allows them to open and close", "It absorbs sunlight"],
+            "answer_index": 2
+        },
+        {
+            "id": 67, "type": "text_choice",
+            "question": "What is the umbo of a bivalve shell?",
+            "question_image_name": "bivalve_umbo.jpg",
+            "question_image_path": "lib/assets/quiz/images/bivalve_umbo.jpg",
+            "choices": ["The opening of a gastropod shell", "The raised, oldest part near the hinge", "A feeding tentacle", "The shell's outermost pigment"],
+            "answer_index": 1
+        },
+        {
+            "id": 68, "type": "text_choice",
+            "question": "What is the periostracum?",
+            "question_image_name": "shell_periostracum.jpg",
+            "question_image_path": "lib/assets/quiz/images/shell_periostracum.jpg",
+            "choices": ["The muscular foot of a mollusk", "A chamber inside a nautilus", "The hinge ligament only", "A thin organic outer layer of many mollusk shells"],
+            "answer_index": 3
+        },
+        {
+            "id": 69, "type": "text_choice",
+            "question": "What mineral makes up most of the hard shell material in many mollusks?",
+            "question_image_name": "calcium_carbonate_shell.jpg",
+            "question_image_path": "lib/assets/quiz/images/calcium_carbonate_shell.jpg",
+            "choices": ["Sodium chloride", "Calcium carbonate", "Iron oxide", "Silicon metal"],
+            "answer_index": 1
+        },
+        {
+            "id": 70, "type": "text_choice",
+            "question": "Which molluskan structure secretes the material used to build the shell?",
+            "question_image_name": "mollusk_mantle.jpg",
+            "question_image_path": "lib/assets/quiz/images/mollusk_mantle.jpg",
+            "choices": ["Radula", "Foot", "Mantle", "Siphon"],
+            "answer_index": 2
+        },
+        {
+            "id": 71, "type": "text_choice",
+            "question": "What is a radula?",
+            "question_image_name": "radula_diagram.jpg",
+            "question_image_path": "lib/assets/quiz/images/radula_diagram.jpg",
+            "choices": ["A bivalve shell hinge", "A chamber inside a nautilus shell", "An external shell-opening valve", "A toothed feeding structure found in many mollusks"],
+            "answer_index": 3
         }
       ]
     }
