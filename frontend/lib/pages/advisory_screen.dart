@@ -19,7 +19,8 @@ class AdvisoryScreen extends StatefulWidget {
 }
 
 class _AdvisoryScreenState extends State<AdvisoryScreen> {
-  static const _defaultBackendUrl = 'https://seastem.up.railway.app';
+  static const _defaultBackendUrl = 'https://sistem1-production.up.railway.app';
+
   static const _backendUrl = String.fromEnvironment(
     'BACKEND_URL',
     defaultValue: _defaultBackendUrl,
@@ -46,8 +47,8 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
   String get _baseUrl {
     if (_backendUrl.trim().isNotEmpty) return _backendUrl;
     return Platform.isAndroid
-        ? 'https://seastem.up.railway.app'
-        : 'https://seastem.up.railway.app';
+        ? 'https://sistem1-production.up.railway.app'
+        : 'https://sistem1-production.up.railway.app';
   }
 
   Uri get _apiUri => Uri.parse('$_baseUrl/api/advisories/shellfish/');
