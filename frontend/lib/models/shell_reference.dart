@@ -4,6 +4,7 @@ class ShellReference {
     required this.scientificName,
     required this.habitat,
     required this.edibility,
+    required this.recommendedDish,
     required this.safety,
   });
 
@@ -11,6 +12,7 @@ class ShellReference {
   final String scientificName;
   final String habitat;
   final String edibility;
+  final String recommendedDish;
   final String safety;
 }
 
@@ -33,6 +35,7 @@ const _shellReferences = <String, ShellReference>{
     habitat:
         'Mangrove mudflats, brackish water, estuaries and fishpond areas. Usually found on muddy intertidal surfaces, particularly around the upper or shaded portions of mangroves. Common throughout the Philippines.',
     edibility: 'Edible',
+    recommendedDish: 'Ginataang bagongon or bagongon cooked with garlic and tomatoes.',
     safety:
         'Generally harvested as food in the Philippines. Collect only from clean, non-polluted mangrove and estuarine areas and cook thoroughly.',
   ),
@@ -42,6 +45,7 @@ const _shellReferences = <String, ShellReference>{
     habitat:
         'Shallow tropical marine areas, particularly sand beneath coral and rocks, rocky shores and reef areas. Usually around 0-10 m, although it may occur in related shallow habitats.',
     edibility: 'Not recommended / dangerous',
+    recommendedDish: 'No dish recommended. Do not eat or handle live specimens.',
     safety:
         'Highly venomous. Never handle a live specimen. It can fire a harpoon-like tooth containing venom and potentially cause severe or fatal envenomation.',
   ),
@@ -51,6 +55,7 @@ const _shellReferences = <String, ShellReference>{
     habitat:
         'Coastal and estuarine waters, usually shallow water around 0-20 m. They attach to rocks, submerged structures, shells and other hard surfaces. Common and commercially cultured in Cavite, Capiz and Negros Occidental.',
     edibility: 'Edible',
+    recommendedDish: 'Gising-gising na tahong, baked mussels or steamed mussels with garlic.',
     safety:
         'Eat only mussels from approved or clean harvesting areas. Mussels are filter feeders and can accumulate harmful microorganisms, toxins and pollutants. Cook thoroughly.',
   ),
@@ -60,6 +65,7 @@ const _shellReferences = <String, ShellReference>{
     habitat:
         'Deep reef slopes and continental-shelf or slope areas, often associated with coral-reef drop-offs and deeper areas. Documented movements can range roughly 100-700 m, with some sources reporting habitat to about 750 m.',
     edibility: 'Edible, but limited or local consumption',
+    recommendedDish: 'No general dish recommendation; consumption should follow local guidance and conservation rules.',
     safety:
         'Meat is consumed in some Philippine local markets, but this is a deep-water animal and should not be treated like an ordinary shallow-water shellfish.',
   ),
@@ -69,6 +75,7 @@ const _shellReferences = <String, ShellReference>{
     habitat:
         'Primarily intertidal rocky and coral areas. Often hides or buries itself in sand during the day and comes out to graze on algae-covered rocks at night. Also occurs around mangroves and has been documented on intertidal shores of Capiz and other Philippine areas.',
     edibility: 'Edible',
+    recommendedDish: 'ginataang nerita polita.',
     safety:
         'Generally harmless and documented as a food species. As with other wild mollusks, avoid polluted collection sites and cook properly.',
   ),
@@ -78,6 +85,7 @@ const _shellReferences = <String, ShellReference>{
     habitat:
         'Shallow tropical marine bottom, generally around 0-24 m. Found around reef and coastal areas and collected by gleaning in the Philippines; documented throughout the Philippines and in Panay.',
     edibility: 'Edible',
+    recommendedDish: 'Ginataang lampirong, grilled spider conch or spider conch adobo.',
     safety:
         'The animal is eaten in the Philippines, including after boiling and preparation as food. Handle the large shell carefully because its projections can be sharp.',
   ),
@@ -87,6 +95,7 @@ const _shellReferences = <String, ShellReference>{
     habitat:
         'Coral reefs, rocky intertidal areas, sand among rocks or corals, tidal pools and branched corals. Usually from the intertidal to roughly 30 m. Common around Philippine reef environments.',
     edibility: 'Edible',
+    recommendedDish: 'Boiled tiger cowrie or tiger cowrie cooked in coconut milk.',
     safety:
         'Documented as food in the Philippines; the meat may be boiled and eaten. Avoid collecting from contaminated waters and cook thoroughly.',
   ),
@@ -96,6 +105,7 @@ const _shellReferences = <String, ShellReference>{
     habitat:
         'A marine bivalve associated with shallow coastal and soft-bottom environments. In the Philippines it is documented as Tuway-matsing in Batan Bay, Aklan, Panay, and is sold in Capiz markets.',
     edibility: 'Edible',
+    recommendedDish: 'Sinigang na tuway, steamed tuway or tuway cooked in coconut milk.',
     safety:
         'A documented edible Philippine mollusk. Because it is a filter-feeding bivalve, harvest should come from safe or approved waters and the meat should be cooked properly.',
   ),

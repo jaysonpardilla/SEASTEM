@@ -8,13 +8,12 @@ class QuizManager {
   QuizManager({required this.data, required this.preferences, Random? random})
     : _random = random ?? Random();
 
-  static const int questionsPerSession = 5;
+  static const int questionsPerSession = 25;
+  static const String _cycleHistoryKey = 'quiz_cycle_history_v2';
 
   final QuizData data;
   final SharedPreferences preferences;
   final Random _random;
-  final Map<String, Set<int>> _usedQuestionIds = {};
-
   List<QuizQuestion> _sessionQuestions = [];
   List<QuizCategory> _sessionCategories = [];
   int _currentIndex = 0;
@@ -35,43 +34,64 @@ class QuizManager {
       hasSession && _currentIndex == _sessionQuestions.length - 1;
 
   Future<void> startRandomQuiz() async {
-    final available = <({QuizCategory category, QuizQuestion question})>[];
-    for (final category in data.categories) {
-      final used = await _loadUsedIds(category);
-      var remaining =
-          category.questions
-              .where((question) => !used.contains(question.id))
-              .map((question) => (category: category, question: question))
-              .toList();
-      if (remaining.isEmpty && category.questions.isNotEmpty) {
-        used.clear();
-        await _saveUsedIds(category);
-        remaining =
-            category.questions
-                .map((question) => (category: category, question: question))
-                .toList();
-      }
-      available.addAll(remaining);
+    final allQuestions = [
+      for (final category in data.categories)
+        for (final question in category.questions)
+          (category: category, question: question),
+    ];
+    if (allQuestions.isEmpty) return;
+
+    var cycleHistory = _loadCycleHistory();
+    final randomMode = cycleHistory.length >= allQuestions.length;
+    if (randomMode) {
+      cycleHistory = [];
     }
 
-    if (available.isEmpty) return;
-    available.shuffle(_random);
-
+    final historyKeys = cycleHistory.toSet();
+    final available =
+        allQuestions
+            .where((entry) => !historyKeys.contains(_questionKey(entry)))
+            .toList()
+          ..shuffle(_random);
     final selected = <({QuizCategory category, QuizQuestion question})>[];
-    final selectedIds = <int>{};
-    for (final entry in available) {
-      if (selectedIds.add(entry.question.id)) {
-        selected.add(entry);
+    final selectedKeys = <String>{};
+
+    void addFrom(
+      Iterable<({QuizCategory category, QuizQuestion question})> entries,
+    ) {
+      for (final entry in entries) {
+        if (selected.length == questionsPerSession) break;
+        if (selectedKeys.add(_questionKey(entry))) selected.add(entry);
       }
-      if (selected.length == questionsPerSession) break;
     }
+
+    addFrom(available);
+
+    // The third 25-question session has 21 new questions left, so fill the
+    // remaining slots with questions from the first session only.
+    if (selected.length < questionsPerSession && cycleHistory.length >= 50) {
+      final firstSessionKeys = cycleHistory.take(questionsPerSession).toSet();
+      final firstSessionQuestions =
+          allQuestions
+              .where((entry) => firstSessionKeys.contains(_questionKey(entry)))
+              .toList()
+            ..shuffle(_random);
+      addFrom(firstSessionQuestions);
+    }
+
+    if (selected.isEmpty) return;
     _sessionQuestions = selected.map((entry) => entry.question).toList();
     _sessionCategories = selected.map((entry) => entry.category).toList();
     _currentCategory = _sessionCategories.first;
     _currentIndex = 0;
     _score = 0;
     _selectedAnswerIndex = null;
-    await _markCurrentQuestionDisplayed();
+    if (!randomMode) {
+      cycleHistory.addAll(
+        selected.map(_questionKey).where((key) => !cycleHistory.contains(key)),
+      );
+      await preferences.setStringList(_cycleHistoryKey, cycleHistory);
+    }
   }
 
   Future<void> selectAnswer(int answerIndex) async {
@@ -87,7 +107,6 @@ class QuizManager {
     _currentIndex++;
     _currentCategory = _sessionCategories[_currentIndex];
     _selectedAnswerIndex = null;
-    await _markCurrentQuestionDisplayed();
     return false;
   }
 
@@ -100,33 +119,10 @@ class QuizManager {
     _selectedAnswerIndex = null;
   }
 
-  Future<Set<int>> _loadUsedIds(QuizCategory category) async {
-    final cached = _usedQuestionIds[category.id];
-    if (cached != null) return cached;
-
-    final stored = preferences.getStringList(_storageKey(category)) ?? [];
-    final used = stored.map(int.tryParse).whereType<int>().toSet();
-    _usedQuestionIds[category.id] = used;
-    return used;
+  List<String> _loadCycleHistory() {
+    return preferences.getStringList(_cycleHistoryKey) ?? <String>[];
   }
 
-  Future<void> _markCurrentQuestionDisplayed() async {
-    final category = _currentCategory;
-    final question = currentQuestion;
-    if (category == null || question == null) return;
-
-    final used = await _loadUsedIds(category);
-    used.add(question.id);
-    await _saveUsedIds(category);
-  }
-
-  Future<void> _saveUsedIds(QuizCategory category) async {
-    final used = _usedQuestionIds[category.id] ?? <int>{};
-    await preferences.setStringList(
-      _storageKey(category),
-      used.map((id) => id.toString()).toList(),
-    );
-  }
-
-  String _storageKey(QuizCategory category) => 'quiz_used_${category.id}';
+  String _questionKey(({QuizCategory category, QuizQuestion question}) entry) =>
+      '${entry.category.id}:${entry.question.id}';
 }

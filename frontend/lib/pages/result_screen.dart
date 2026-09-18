@@ -237,6 +237,8 @@ class ResultScreen extends StatelessWidget {
           const SizedBox(height: 12),
           _referenceItem('Edibility', reference.edibility),
           const SizedBox(height: 12),
+          _referenceItem('Recommended dishes', reference.recommendedDish),
+          const SizedBox(height: 12),
           _referenceItem('Safety awareness', reference.safety),
         ],
       ),
