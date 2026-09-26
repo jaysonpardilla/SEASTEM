@@ -8,9 +8,9 @@ class BottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color activeColor = Theme.of(context).colorScheme.primary;
-    final Color inactiveColor = const Color(0xFF8B7768);
-    final Color highlightColor = const Color.fromARGB(255, 214, 155, 106);
+    const Color inactiveColor = Color(0xFFFAF8F2);
+    const Color highlightColor = Color(0xFFE8D8B8);
+    const Color activeColor = Color(0xFFE8D8B8);
 
     Widget buildItem({
       required IconData icon,
@@ -50,13 +50,13 @@ class BottomNav extends StatelessWidget {
                     Icon(
                       icon,
                       color: isActive ? activeColor : inactiveColor,
-                      size: 22,
+                      size: 24,
                     ),
                     const SizedBox(height: 4),
                     Text(
                       label,
                       style: TextStyle(
-                        fontSize: 11,
+                        fontSize: 13,
                         color: isActive ? activeColor : inactiveColor,
                       ),
                     ),
@@ -72,7 +72,7 @@ class BottomNav extends StatelessWidget {
     return Container(
       height: 65,
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: const BoxDecoration(color: Colors.white),
+      decoration: const BoxDecoration(color: Color(0xFF0B2D4D)),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -108,13 +108,13 @@ class BottomNav extends StatelessWidget {
                           Icons.qr_code_scanner,
                           color:
                               currentIndex == 2 ? activeColor : inactiveColor,
-                          size: 22,
+                          size: 24,
                         ),
                         const SizedBox(height: 4),
                         Text(
                           'Scan',
                           style: TextStyle(
-                            fontSize: 11,
+                            fontSize: 13,
                             color:
                                 currentIndex == 2 ? activeColor : inactiveColor,
                           ),

@@ -25,20 +25,20 @@ class ResultScreen extends StatelessWidget {
     );
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 251, 251, 251),
+      backgroundColor: const Color(0xFFFAF8F2),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 255, 241, 225),
+        backgroundColor: const Color(0xFF0B2D4D),
         elevation: 0,
         centerTitle: true,
+        automaticallyImplyLeading: false,
         title: const Text(
           'Identification Results',
           style: TextStyle(
-            color: Color(0xFF3E2B18),
+            color: Color(0xFFFAF8F2),
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
         ),
-        iconTheme: const IconThemeData(color: Color(0xFF3E2B18)),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -51,9 +51,9 @@ class ResultScreen extends StatelessWidget {
                 width: double.infinity,
                 height: 220,
                 decoration: BoxDecoration(
-                  color: Colors.black,
+                  color: const Color(0xFFF5EEDC),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFF8B5E3C), width: 3),
+                  border: Border.all(color: const Color(0xFF0B2D4D), width: 3),
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(9),
@@ -82,7 +82,7 @@ class ResultScreen extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF0E3D2),
+                  color: const Color(0xFFF5EEDC),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
@@ -97,7 +97,7 @@ class ResultScreen extends StatelessWidget {
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFF3E2B18),
+                              color: Color(0xFF0B2D4D),
                             ),
                           ),
                         ),
@@ -107,9 +107,9 @@ class ResultScreen extends StatelessWidget {
                             vertical: 8,
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFFFBF6),
+                            color: const Color(0xFFFAF8F2),
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: const Color(0xFFD8C2A8)),
+                            border: Border.all(color: const Color(0xFFE8D8B8)),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
@@ -119,7 +119,7 @@ class ResultScreen extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xFF7B5A3B),
+                                  color: Color(0xFF163E5C),
                                 ),
                               ),
                               Text(
@@ -127,7 +127,7 @@ class ResultScreen extends StatelessWidget {
                                 style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xFF8B5E3C),
+                                  color: Color(0xFF0B2D4D),
                                 ),
                               ),
                             ],
@@ -159,7 +159,7 @@ class ResultScreen extends StatelessWidget {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF8B5E3C),
+                        backgroundColor: const Color(0xFF0B2D4D),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -170,7 +170,7 @@ class ResultScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                          color: Color(0xFFFAF8F2),
                         ),
                       ),
                     ),
@@ -188,7 +188,7 @@ class ResultScreen extends StatelessWidget {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF8B5E3C),
+                        backgroundColor: const Color(0xFF0B2D4D),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -199,7 +199,7 @@ class ResultScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                          color: Color(0xFFFAF8F2),
                         ),
                       ),
                     ),
@@ -218,9 +218,9 @@ class ResultScreen extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFBF6),
+        color: const Color(0xFFFAF8F2),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFD8C2A8)),
+        border: Border.all(color: const Color(0xFFE8D8B8)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -230,7 +230,7 @@ class ResultScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: Color(0xFF3E2B18),
+              color: Color(0xFF0B2D4D),
             ),
           ),
           _referenceItem('Main habitat and where found', reference.habitat),
@@ -254,7 +254,7 @@ class ResultScreen extends StatelessWidget {
           style: const TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w700,
-            color: Color(0xFF6B4B35),
+            color: Color(0xFF163E5C),
           ),
         ),
         const SizedBox(height: 4),
@@ -264,7 +264,7 @@ class ResultScreen extends StatelessWidget {
           style: const TextStyle(
             fontSize: 13,
             height: 1.4,
-            color: Color(0xFF3E2B18),
+            color: Color(0xFF1F2933),
           ),
         ),
       ],

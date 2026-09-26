@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../models/scan_result.dart';
 import '../services/scan_result_service.dart';
+import 'home_screen.dart';
 import 'result_screen.dart';
 
 class ScanScreen extends StatefulWidget {
@@ -264,7 +265,7 @@ class _ScanScreenState extends State<ScanScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 9, 10, 69),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -272,16 +273,24 @@ class _ScanScreenState extends State<ScanScreen>
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
-            color: Color.fromARGB(255, 52, 52, 52),
+            color: Color(0xFFFAF8F2),
           ),
           onPressed: () {
-            widget.onBackPressed?.call();
+            if (widget.onBackPressed != null) {
+              widget.onBackPressed!.call();
+              return;
+            }
+
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+              (route) => false,
+            );
           },
         ),
         title: const Text(
           'Identify Seashell',
           style: TextStyle(
-            color: Color.fromARGB(255, 52, 52, 52),
+            color: Color(0xFFFAF8F2),
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
@@ -336,21 +345,11 @@ class _ScanScreenState extends State<ScanScreen>
                                               decoration: BoxDecoration(
                                                 border: Border(
                                                   top: BorderSide(
-                                                    color: const Color.fromARGB(
-                                                      255,
-                                                      249,
-                                                      193,
-                                                      150,
-                                                    ),
+                                                    color: const Color(0xFFE8D8B8),
                                                     width: 1,
                                                   ),
                                                   left: BorderSide(
-                                                    color: const Color.fromARGB(
-                                                      255,
-                                                      249,
-                                                      193,
-                                                      150,
-                                                    ),
+                                                    color: const Color(0xFFE8D8B8),
                                                     width: 1,
                                                   ),
                                                 ),
@@ -368,21 +367,11 @@ class _ScanScreenState extends State<ScanScreen>
                                               decoration: BoxDecoration(
                                                 border: Border(
                                                   top: BorderSide(
-                                                    color: const Color.fromARGB(
-                                                      255,
-                                                      249,
-                                                      193,
-                                                      150,
-                                                    ),
+                                                    color: const Color(0xFFE8D8B8),
                                                     width: 1,
                                                   ),
                                                   right: BorderSide(
-                                                    color: const Color.fromARGB(
-                                                      255,
-                                                      249,
-                                                      193,
-                                                      150,
-                                                    ),
+                                                    color: const Color(0xFFE8D8B8),
                                                     width: 1,
                                                   ),
                                                 ),
@@ -406,21 +395,11 @@ class _ScanScreenState extends State<ScanScreen>
                                               decoration: BoxDecoration(
                                                 border: Border(
                                                   bottom: BorderSide(
-                                                    color: const Color.fromARGB(
-                                                      255,
-                                                      249,
-                                                      193,
-                                                      150,
-                                                    ),
+                                                    color: const Color(0xFFE8D8B8),
                                                     width: 1,
                                                   ),
                                                   left: BorderSide(
-                                                    color: const Color.fromARGB(
-                                                      255,
-                                                      249,
-                                                      193,
-                                                      150,
-                                                    ),
+                                                    color: const Color(0xFFE8D8B8),
                                                     width: 1,
                                                   ),
                                                 ),
@@ -437,21 +416,11 @@ class _ScanScreenState extends State<ScanScreen>
                                               decoration: BoxDecoration(
                                                 border: Border(
                                                   bottom: BorderSide(
-                                                    color: const Color.fromARGB(
-                                                      255,
-                                                      249,
-                                                      193,
-                                                      150,
-                                                    ),
+                                                    color: const Color(0xFFE8D8B8),
                                                     width: 1,
                                                   ),
                                                   right: BorderSide(
-                                                    color: const Color.fromARGB(
-                                                      255,
-                                                      249,
-                                                      193,
-                                                      150,
-                                                    ),
+                                                    color: const Color(0xFFE8D8B8),
                                                     width: 1,
                                                   ),
                                                 ),
@@ -479,26 +448,26 @@ class _ScanScreenState extends State<ScanScreen>
                                             end: Alignment.bottomCenter,
                                             colors: [
                                               const Color(
-                                                0xFF8B5E3C,
+                                                0xFF0B2D4D,
                                               ).withValues(alpha: 0),
                                               const Color(
-                                                0xFF8B5E3C,
+                                                0xFF0B2D4D,
                                               ).withValues(alpha: 0.15),
                                               const Color(
-                                                0xFF8B5E3C,
+                                                0xFF0B2D4D,
                                               ).withValues(alpha: 0.4),
                                               const Color(
-                                                0xFF8B5E3C,
+                                                0xFF0B2D4D,
                                               ).withValues(alpha: 0.15),
                                               const Color(
-                                                0xFF8B5E3C,
+                                                0xFF0B2D4D,
                                               ).withValues(alpha: 0),
                                             ],
                                             stops: const [0, 0.2, 0.5, 0.8, 1],
                                           ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: const Color.fromARGB(255, 245, 231, 221).withValues(alpha: 0.2),
+                                              color: const Color(0xFFE8D8B8).withValues(alpha: 0.2),
                                               blurRadius: 6,
                                               spreadRadius: 1,
                                             ),
@@ -525,7 +494,7 @@ class _ScanScreenState extends State<ScanScreen>
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
                       child: Container(
-                        color: Colors.black.withValues(alpha: 0.25),
+                        color: const Color(0xFF0B2D4D).withValues(alpha: 0.25),
                       ),
                     ),
                   ),
@@ -541,12 +510,12 @@ class _ScanScreenState extends State<ScanScreen>
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: const Color(0xFF8B5E3C),
+                              color: const Color(0xFF0B2D4D),
                               width: 4,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.18),
+                                color: const Color(0xFF0B2D4D).withValues(alpha: 0.18),
                                 blurRadius: 12,
                                 offset: const Offset(0, 8),
                               ),
@@ -568,7 +537,7 @@ class _ScanScreenState extends State<ScanScreen>
                                         return const Center(
                                           child: Icon(
                                             Icons.broken_image,
-                                            color: Colors.white,
+                                            color: Color(0xFFFAF8F2),
                                             size: 40,
                                           ),
                                         );
@@ -586,7 +555,7 @@ class _ScanScreenState extends State<ScanScreen>
                         const Text(
                           'Processing, Please wait...',
                           style: TextStyle(
-                            color: Colors.white,
+                            color: Color(0xFFFAF8F2),
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
                           ),
@@ -607,11 +576,11 @@ class _ScanScreenState extends State<ScanScreen>
                           width: 68,
                           height: 68,
                           decoration: BoxDecoration(
-                            color: const Color(0xFF8B5E3C),
+                            color: const Color(0xFF0B2D4D),
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.4),
+                                color: const Color(0xFF0B2D4D).withValues(alpha: 0.4),
                                 blurRadius: 12,
                                 offset: const Offset(0, 6),
                               ),
@@ -619,7 +588,7 @@ class _ScanScreenState extends State<ScanScreen>
                           ),
                           child: const Icon(
                             Icons.center_focus_strong,
-                            color: Colors.white,
+                            color: Color(0xFFFAF8F2),
                             size: 34,
                           ),
                         ),
@@ -631,7 +600,7 @@ class _ScanScreenState extends State<ScanScreen>
           } else {
             return const Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF8B5E3C)),
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF0B2D4D)),
               ),
             );
           }

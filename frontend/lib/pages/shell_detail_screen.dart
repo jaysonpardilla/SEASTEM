@@ -26,9 +26,9 @@ class ShellDetailScreen extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF0E3D2),
+        color: const Color(0xFFF5EEDC),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFD8C2A8)),
+        border: Border.all(color: const Color(0xFFE8D8B8)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,18 +36,18 @@ class ShellDetailScreen extends StatelessWidget {
           Text(
             title,
             style: const TextStyle(
-              fontSize: 12,
+              fontSize: 14,
               fontWeight: FontWeight.w700,
-              color: Color(0xFF6B4B35),
+              color: Color(0xFF163E5C),
             ),
           ),
           const SizedBox(height: 6),
           Text(
             value,
             style: const TextStyle(
-              fontSize: 13,
+              fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF3E2B18),
+              color: Color(0xFF0B2D4D),
               height: 1.4,
             ),
           ),
@@ -118,17 +118,17 @@ class ShellDetailScreen extends StatelessWidget {
     final edibilityStatus = _safeString(edibility['edibility'] ?? 'Unknown');
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFFAF8F2),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 255, 255, 254),
+        backgroundColor: const Color(0xFF0B2D4D),
         elevation: 0,
-        iconTheme: const IconThemeData(color: Color(0xFF8B5E3C)),
+        iconTheme: const IconThemeData(color: Color(0xFFFAF8F2)),
         centerTitle: true,
         title: const Text(
           'View shell Details',
           style: TextStyle(
-            color: Color(0xFF3E2B18),
-            fontSize: 18,
+            color: Color(0xFFFAF8F2),
+            fontSize: 17,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -145,12 +145,12 @@ class ShellDetailScreen extends StatelessWidget {
                   height: 220,
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFFBF6),
+                    color: const Color(0xFFFAF8F2),
                     borderRadius: BorderRadius.circular(28),
-                    border: Border.all(color: const Color(0xFFD8C2A8)),
+                    border: Border.all(color: const Color(0xFFE8D8B8)),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
+                        color: const Color(0xFF0B2D4D).withValues(alpha: 0.05),
                         blurRadius: 12,
                         offset: const Offset(0, 6),
                       ),
@@ -172,14 +172,14 @@ class ShellDetailScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              const Divider(color: Color(0xFFD8C2A8), thickness: 1, height: 1),
+              const Divider(color: Color.fromARGB(255, 24, 14, 118), thickness: 1, height: 1),
               const SizedBox(height: 18),
               Text(
                 commonName,
                 style: const TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xFF3E2B18),
+                  fontSize: 23,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF0B2D4D),
                 ),
               ),
               const SizedBox(height: 6),
@@ -188,7 +188,7 @@ class ShellDetailScreen extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 14,
                   fontStyle: FontStyle.italic,
-                  color: Color(0xFF6B4B35),
+                  color: Color(0xFF163E5C),
                 ),
               ),
               const SizedBox(height: 16),
@@ -228,15 +228,15 @@ class ShellDetailScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 236, 224, 208),
+        color: const Color(0xFFE8D8B8),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
         '$label: $value',
         style: const TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w600,
-          color: Color(0xFF6B4B35),
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: Color(0xFF163E5C),
         ),
       ),
     );

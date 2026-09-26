@@ -28,8 +28,8 @@ class OnboardingScreen extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.black.withOpacity(0.42),
-                    Colors.black.withOpacity(0.16),
+                    const Color(0xFF0B2D4D).withOpacity(0.78),
+                    const Color(0xFFE8D8B8).withOpacity(0.18),
                     Colors.transparent,
                   ],
                   stops: const [0.0, 0.45, 1.0],
@@ -44,7 +44,7 @@ class OnboardingScreen extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.topRight,
                   colors: [
-                    Colors.black.withOpacity(0.16),
+                    const Color(0xFF0B2D4D).withOpacity(0.34),
                     Colors.transparent,
                     Colors.transparent,
                   ],
@@ -71,11 +71,11 @@ class OnboardingScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    width: 72,
-                    height: 72,
+                    width: 85,
+                    height: 85,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
-                      color: Colors.white.withOpacity(0.08),
+                      color: const Color(0xFFFAF8F2).withOpacity(0.08),
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(16),
@@ -89,7 +89,7 @@ class OnboardingScreen extends StatelessWidget {
                   Text(
                     'Discover the world of sea shells',
                     style: const TextStyle(
-                      color: Color(0xFFF0D2A8),
+                      color: Color(0xFFE8D8B8),
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
                       height: 0.9,
@@ -103,17 +103,17 @@ class OnboardingScreen extends StatelessWidget {
                     child: RichText(
                       text: TextSpan(
                         style: const TextStyle(
-                          color: Color(0xFF3E2B18),
-                          fontSize: 13,
+                          color: Color(0xFF1F2933),
+                          fontSize: 15,
                           fontWeight: FontWeight.bold,
                           height: 1.5,
                         ),
                         children: [
                           TextSpan(
                             text:
-                                'Identify seashells instantly with AI, explore detailed species information, and discover the beauty of marine life.',
+                                'Identify seashells instantly with AI, explore the detailed species information, and discover the beauty of marine life.',
                             style: const TextStyle(
-                              backgroundColor: Color(0xFFF0E3D2),
+                              backgroundColor: Color(0xFFE8D8B8),
                             ),
                           ),
                         ],
@@ -143,7 +143,7 @@ class OnboardingScreen extends StatelessWidget {
                                 style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.white,
+                                  color: Color(0xFFFAF8F2),
                                 ),
                               ),
                             ),
@@ -151,7 +151,7 @@ class OnboardingScreen extends StatelessWidget {
                               right: 18,
                               child: Icon(
                                 Icons.arrow_forward,
-                                color: Colors.white,
+                                color: Color(0xFFFAF8F2),
                                 size: 22,
                               ),
                             ),
@@ -166,9 +166,9 @@ class OnboardingScreen extends StatelessWidget {
                       child: Text(
                         'Start exploring seashells offline.',
                         style: const TextStyle(
-                          fontSize: 13,
+                          fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 255, 229, 204),
+                          color: Color.fromARGB(255, 26, 18, 60),
                         ),
                       ),
                     ),
@@ -189,7 +189,7 @@ class _SunRaysPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width * 0.22, size.height * 0.24);
-    final rayPaint = Paint()..color = const Color.fromARGB(255, 255, 216, 143).withOpacity(0.11);
+    final rayPaint = Paint()..color = const Color(0xFFE8D8B8).withOpacity(0.16);
     final rayAngles = [-0.55, -0.2, 0.15, 0.5, 0.85, 1.2];
 
     for (var index = 0; index < rayAngles.length; index++) {
@@ -209,7 +209,7 @@ class _SunRaysPainter extends CustomPainter {
     canvas.drawCircle(
       center,
       45,
-      Paint()..color = const Color.fromARGB(255, 219, 172, 78).withOpacity(0.2),
+      Paint()..color = const Color(0xFFE8D8B8).withOpacity(0.2),
     );
   }
 
@@ -287,18 +287,19 @@ class _GlowingButtonState extends State<_GlowingButton>
           borderRadius: BorderRadius.circular(32),
           gradient: const LinearGradient(
             colors: [
-              Color.fromARGB(255, 250, 219, 180),
-              Color.fromARGB(255, 123, 96, 20)],
+              Color(0xFF0B2D4D),
+              Color(0xFF1F2933),
+            ],
           ),
           boxShadow: [
             BoxShadow(
-              color: const Color.fromARGB(255, 133, 193, 238).withOpacity(_pressed ? 0.55 : 0.35),
+              color: const Color(0xFFE8D8B8).withOpacity(_pressed ? 0.55 : 0.35),
               blurRadius: _pressed ? 30 : 20,
               spreadRadius: _pressed ? 2 : 0,
               offset: const Offset(0, 8),
             ),
             BoxShadow(
-              color: const Color.fromARGB(255, 141, 230, 248).withOpacity(_pressed ? 0.28 : 0.18),
+              color: const Color(0xFF163E5C).withOpacity(_pressed ? 0.28 : 0.18),
               blurRadius: _pressed ? 32 : 28,
               spreadRadius: _pressed ? 2 : 0,
               offset: const Offset(0, 0),
@@ -331,9 +332,9 @@ class _GlowingButtonState extends State<_GlowingButton>
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
-                                  Colors.white.withOpacity(0.0),
-                                  Colors.white.withOpacity(0.28),
-                                  Colors.white.withOpacity(0.0),
+                                  Color(0xFFFAF8F2).withOpacity(0.0),
+                                  Color(0xFFFAF8F2).withOpacity(0.28),
+                                  Color(0xFFFAF8F2).withOpacity(0.0),
                                 ],
                               ),
                             ),

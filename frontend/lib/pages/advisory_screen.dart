@@ -28,7 +28,9 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
   static const _historyPageSize = 5;
 
   Map<String, dynamic>? _advisory;
+  Map<String, dynamic>? _cachedAdvisory;
   String? _lastUpdated;
+  String? _cachedLastUpdated;
   String? _error;
   bool _loading = true;
   bool _syncRunning = false;
@@ -43,6 +45,7 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
   int _historyTotal = 0;
   String? _selectedHistoricalPdfUrl;
   File? _cachedPdfFile;
+  bool _pdfLoading = false;
 
   String get _baseUrl {
     if (_backendUrl.trim().isNotEmpty) return _backendUrl;
@@ -93,8 +96,8 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
     if (advisoryJson != null) {
       try {
         final cached = jsonDecode(advisoryJson) as Map<String, dynamic>;
-        _advisory = cached['advisory'] as Map<String, dynamic>?;
-        _lastUpdated = cached['last_updated'] as String?;
+        _cachedAdvisory = cached['advisory'] as Map<String, dynamic>?;
+        _cachedLastUpdated = cached['last_updated'] as String?;
       } catch (_) {}
     }
 
@@ -119,8 +122,8 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
       } catch (_) {}
     }
 
-    if (_advisory != null) {
-      final cachedPdf = await _cachedPdfFor(_advisory!);
+    if (_cachedAdvisory != null) {
+      final cachedPdf = await _cachedPdfFor(_cachedAdvisory!);
       if (cachedPdf != null && await cachedPdf.exists()) {
         _cachedPdfFile = cachedPdf;
       }
@@ -143,13 +146,44 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
 
   Future<void> _cachePdf(String url, Map<String, dynamic> bulletin) async {
     final target = await _cachedPdfFor(bulletin);
-    if (target == null || await target.exists()) return;
+    if (target == null) return;
+    if (await target.exists()) {
+      if (mounted) setState(() => _cachedPdfFile = target);
+      return;
+    }
     final response = await http
         .get(Uri.parse(url))
         .timeout(const Duration(seconds: 60));
     if (response.statusCode == 200 && response.bodyBytes.isNotEmpty) {
       await target.writeAsBytes(response.bodyBytes, flush: true);
       if (mounted) setState(() => _cachedPdfFile = target);
+    }
+  }
+
+  Future<void> _ensureCurrentPdfReady() async {
+    if (_advisory == null) return;
+
+    final target = await _cachedPdfFor(_advisory!);
+    if (target == null) return;
+
+    if (await target.exists()) {
+      if (mounted) setState(() => _cachedPdfFile = target);
+      return;
+    }
+
+    if (mounted) setState(() => _pdfLoading = true);
+    try {
+      final response = await http
+          .get(Uri.parse(_pdfUri().toString()))
+          .timeout(const Duration(seconds: 60));
+      if (response.statusCode == 200 && response.bodyBytes.isNotEmpty) {
+        await target.writeAsBytes(response.bodyBytes, flush: true);
+        if (mounted) setState(() => _cachedPdfFile = target);
+      }
+    } catch (_) {
+      // Keep the page usable without blocking the UI.
+    } finally {
+      if (mounted) setState(() => _pdfLoading = false);
     }
   }
 
@@ -177,6 +211,9 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
 
       if (!mounted) return;
 
+      final nextAdvisory = payload['advisory'] as Map<String, dynamic>?;
+      final nextLastUpdated = payload['last_updated'] as String?;
+
       setState(() {
         _syncRunning = isSyncRunning;
         _syncStatusMessage =
@@ -184,11 +221,27 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
                 ? (syncInfo['error'] ??
                     'BFAR sync is already running. Please wait.')
                 : null;
-        _advisory = payload['advisory'] as Map<String, dynamic>?;
-        _lastUpdated = payload['last_updated'] as String?;
+        _advisory = nextAdvisory;
+        _lastUpdated = nextLastUpdated;
         _selectedHistoricalPdfUrl = null;
         _cachedPdfFile = null;
+        _pdfLoading = false;
       });
+
+      if (nextAdvisory != null) {
+        unawaited(_ensureCurrentPdfReady());
+      }
+
+      if (nextAdvisory != null && nextLastUpdated != null) {
+        final preferences = await SharedPreferences.getInstance();
+        await preferences.setString(
+          'bfar_advisory_latest',
+          jsonEncode({
+            'advisory': nextAdvisory,
+            'last_updated': nextLastUpdated,
+          }),
+        );
+      }
 
       if (isSyncRunning) {
         _syncStatusTimer = Timer(const Duration(seconds: 3), () {
@@ -207,7 +260,13 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
       }
 
       final preferences = await SharedPreferences.getInstance();
-      await preferences.setString('bfar_advisory_latest', jsonEncode(payload));
+      await preferences.setString(
+        'bfar_advisory_latest',
+        jsonEncode({
+          'advisory': _advisory,
+          'last_updated': _lastUpdated,
+        }),
+      );
       if (_advisory != null) {
         unawaited(_cachePdf(_pdfUri().toString(), _advisory!));
       }
@@ -217,9 +276,14 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
       }
     } catch (exception) {
       if (mounted) {
-        setState(
-          () => _error = exception.toString().replaceFirst('Exception: ', ''),
-        );
+        setState(() {
+          _error = exception.toString().replaceFirst('Exception: ', '');
+          if (_cachedAdvisory != null) {
+            _advisory = _cachedAdvisory;
+            _lastUpdated = _cachedLastUpdated;
+            _selectedHistoricalPdfUrl = null;
+          }
+        });
       }
     } finally {
       if (mounted) {
@@ -357,23 +421,23 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const navy = Color(0xFF3E2B18);
+    const navy = Color(0xFF0B2D4D);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFFAF8F2),
       appBar: AppBar(
         title: const Text(
           'BFAR Shellfish Advisory',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,
-            color: navy,
+            color: Color(0xFFFAF8F2),
           ),
         ),
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        backgroundColor: const Color(0xFF0B2D4D),
         elevation: 0,
         titleSpacing: 0,
-        iconTheme: const IconThemeData(color: Color(0xFF8B5E3C)),
+        iconTheme: const IconThemeData(color: Color(0xFFFAF8F2)),
         leading:
             widget.onBackPressed == null
                 ? null
@@ -407,19 +471,19 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
                 margin: const EdgeInsets.only(bottom: 12),
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.orange.shade50,
+                  color: const Color(0xFFF5EEDC),
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.orange.shade200),
+                  border: Border.all(color: Color(0xFFE8D8B8)),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.sync, color: Colors.orange),
+                    const Icon(Icons.sync, color: Color(0xFF0B2D4D)),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         _syncStatusMessage!,
                         style: const TextStyle(
-                          color: Color(0xFF7A4D00),
+                          color: Color(0xFF163E5C),
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -450,6 +514,7 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
         DateTime.tryParse(advisoryDate?.toString() ?? '')?.year ??
         DateTime.now().year;
     final displayedPdfUrl = _selectedHistoricalPdfUrl ?? _pdfUri().toString();
+    final showPdfViewer = _cachedPdfFile != null && !_pdfLoading;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -457,7 +522,7 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFFEADBC8),
+            color: const Color(0xFFE8D8B8),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -476,20 +541,42 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
         ),
         const SizedBox(height: 18),
         if (displayedPdfUrl.isNotEmpty)
-          SizedBox(
-            height: 520,
-            child:
-                _cachedPdfFile != null
-                    ? SfPdfViewer.file(_cachedPdfFile!)
-                    : SfPdfViewer.network(displayedPdfUrl),
-          ),
+          showPdfViewer
+              ? SizedBox(
+                height: 520,
+                child: SfPdfViewer.file(_cachedPdfFile!),
+              )
+              : Container(
+                height: 180,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF5EEDC),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: const Color(0xFFE8D8B8)),
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const CircularProgressIndicator(),
+                      const SizedBox(height: 12),
+                      Text(
+                        _pdfLoading ? 'Loading latest advisory PDF...' : 'Preparing advisory...',
+                        style: const TextStyle(
+                          color: Color(0xFF163E5C),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
         const SizedBox(height: 14),
         Container(
-          padding: const EdgeInsets.all(14),
+          padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: const Color(0xFFFFFBF6),
+            color: const Color(0xFFFAF8F2),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFFD8C2A8)),
+            border: Border.all(color: const Color(0xFFE8D8B8)),
           ),
           child: Row(
             children: [
@@ -499,7 +586,7 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
                   icon: const Icon(Icons.picture_as_pdf),
                   label: const Text(
                     'Download PDF',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
@@ -514,7 +601,7 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
                   icon: const Icon(Icons.language),
                   label: const Text(
                     'BFAR Website',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
@@ -533,7 +620,7 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
           'RED TIDE UPDATE',
           style: TextStyle(
             color: navy,
-            fontSize: 14,
+            fontSize: 15,
             fontWeight: FontWeight.w600,
             letterSpacing: 0,
           ),
@@ -561,14 +648,14 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFBF6),
+        color: const Color(0xFFFAF8F2),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFD8C2A8)),
+        border: Border.all(color: const Color(0xFFE8D8B8)),
       ),
       child: Column(
         children: [
           Container(
-            color: const Color(0xFFF0E3D2),
+            color: const Color(0xFFF5EEDC),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
             child: Row(
               children: [
@@ -617,7 +704,7 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
                   vertical: 14,
                 ),
                 decoration: const BoxDecoration(
-                  border: Border(top: BorderSide(color: Color(0xFFE6D8C8))),
+                  border: Border(top: BorderSide(color: Color(0xFFE8D8B8))),
                 ),
                 child: Row(
                   children: [
@@ -680,6 +767,7 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
                         'Page $_currentPage of $_totalPages  |  $_historyTotal total',
                         style: TextStyle(
                           color: navy,
+                          fontSize: 14,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -708,7 +796,7 @@ class _Message extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 40),
       child: Column(
         children: [
-          Icon(icon, size: 48, color: Colors.blueGrey),
+          Icon(icon, size: 48, color: const Color(0xFF163E5C)),
           const SizedBox(height: 12),
           Text(text, textAlign: TextAlign.center),
         ],

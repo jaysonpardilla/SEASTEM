@@ -15,7 +15,7 @@ class QuizResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isPassed = score == 4 && totalQuestions == 5;
+    final isPassed = score >= 20;
 
     return Align(
       alignment: Alignment.topCenter,
@@ -56,7 +56,7 @@ class QuizResultScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w800,
-                        color: Color(0xFF3E2B18),
+                        color: Color(0xFF0B2D4D),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -64,7 +64,7 @@ class QuizResultScreen extends StatelessWidget {
                       'You scored $score out of $totalQuestions.',
                       style: const TextStyle(
                         fontSize: 16,
-                        color: Color(0xFF6B4B35),
+                        color: Color(0xFF163E5C),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -72,7 +72,7 @@ class QuizResultScreen extends StatelessWidget {
                     DecoratedBox(
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [Color(0xFFB88962), Color(0xFF8B5E3C)],
+                          colors: [Color(0xFF163E5C), Color(0xFF0B2D4D)],
                         ),
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -80,7 +80,7 @@ class QuizResultScreen extends StatelessWidget {
                         onPressed: onRestart,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
-                          foregroundColor: Colors.white,
+                          foregroundColor: const Color(0xFFFAF8F2),
                           shadowColor: Colors.transparent,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 24,

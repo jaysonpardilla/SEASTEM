@@ -54,8 +54,13 @@ def shellfish_advisory(request):
             'sync': sync_result,
         }, status=503 if sync_result.get('error') else 200)
 
-    logger.info(f"Returning advisory: {advisory.bulletin_number} "
-               f"(sync={'forced' if request.method == 'POST' else 'cached'})")
+    logger.info(
+        "Returning latest advisory: bulletin=%s date=%s source=%s method=%s",
+        advisory.bulletin_number,
+        advisory.advisory_date.isoformat() if advisory.advisory_date else None,
+        advisory.source_url,
+        'forced' if request.method == 'POST' else 'cached',
+    )
 
     response_data = {
         'advisory': {

@@ -791,8 +791,8 @@
           "id": 30,
           "type": "text_choice",
           "question": "What environment is typical for many freshwater snails?",
-          "question_image_name": "freshwater_snail.jpg",
-          "question_image_path": "lib/assets/quiz/images/freshwater_snail.jpg",
+          "question_image_name": "freshwater_snail.png",
+          "question_image_path": "lib/assets/quiz/images/freshwater_snail.png",
           "choices": [
             "Lakes, ponds, and rivers",
             "Coral reefs only",
@@ -1218,7 +1218,7 @@
             "id": 65, "type": "text_choice",
             "question": "Why can wild shellfish be unsafe even when they look normal?",
             "question_image_name": "shellfish_safety_warning.jpg",
-            "question_image_path": "lib/assets/quiz/images/shellfish_safety_warning.jpg",
+            "question_image_path": "lib/assets/quiz/images/shellfish_safety-warning.jpg",
             "choices": ["Healthy shellfish always glow", "Harmful microbes or toxins may not be visible", "Their shells show every contaminant", "All wild shellfish are poisonous"],
             "answer_index": 1
         },

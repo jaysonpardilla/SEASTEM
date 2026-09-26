@@ -46,26 +46,28 @@ class _ExploreScreenState extends State<ExploreScreen> {
       );
       final decoded = jsonDecode(rawData) as List<dynamic>;
 
-      final shells =
-          decoded.map<Map<String, dynamic>>((entry) {
-            final item = entry as Map<String, dynamic>;
-            final basic =
-                item['basic_identification'] as Map<String, dynamic>? ?? {};
-            final commonName =
-                (basic['common_name'] ?? 'Unknown shell').toString();
-            final imagePath = _resolveAssetPath(
-              (item['image_path'] ?? '').toString(),
-            );
-            final classification =
-                (basic['classification'] ?? 'Unknown').toString();
+      final excludedCategories = {'Cephalopod', 'Scaphopod'};
+      final shells = <Map<String, dynamic>>[];
 
-            return {
-              'name': commonName,
-              'image': imagePath,
-              'category': classification,
-              'data': item,
-            };
-          }).toList();
+      for (final entry in decoded) {
+        final item = entry as Map<String, dynamic>;
+        final basic = item['basic_identification'] as Map<String, dynamic>? ?? {};
+        final commonName = (basic['common_name'] ?? 'Unknown shell').toString();
+        final imagePath = _resolveAssetPath((item['image_path'] ?? '').toString());
+        final classification =
+            (basic['classification'] ?? 'Unknown').toString().trim();
+
+        if (excludedCategories.contains(classification)) {
+          continue;
+        }
+
+        shells.add({
+          'name': commonName,
+          'image': imagePath,
+          'category': classification,
+          'data': item,
+        });
+      }
 
       final uniqueCategories =
           shells.map((shell) => shell['category'] ?? 'Unknown').toSet().toList()
@@ -76,7 +78,11 @@ class _ExploreScreenState extends State<ExploreScreen> {
       setState(() {
         _shells.clear();
         _shells.addAll(shells);
-        _filters = ['All', ...uniqueCategories];
+        _filters = [
+          'All',
+          ...uniqueCategories,
+          if (!uniqueCategories.contains('Polyplacophora')) 'Polyplacophora',
+        ];
         if (!_filters.contains(_selectedFilter)) {
           _selectedFilter = 'All';
         }
@@ -98,12 +104,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
     final map = {
       'bivalves': 'Bivalve',
       'bivalve': 'Bivalve',
-      'cephalopods': 'Cephalopod',
-      'cephalopod': 'Cephalopod',
       'gastropods': 'Gastropod',
       'gastropod': 'Gastropod',
-      'scaphopods': 'Scaphopod',
-      'scaphopod': 'Scaphopod',
+      'polyplacophoras': 'Polyplacophora',
       'polyplacophora': 'Polyplacophora',
     };
 
@@ -143,7 +146,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: const Color(0xFFFAF8F2),
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -155,7 +158,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF3E2B18),
+                  color: Color(0xFF0B2D4D),
                 ),
               ),
               const SizedBox(height: 16),
@@ -165,16 +168,16 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   width: MediaQuery.of(context).size.width * 1,
                   child: TextField(
                     controller: _searchController,
-                    style: const TextStyle(fontSize: 12),
+                    style: const TextStyle(fontSize: 13),
                     decoration: InputDecoration(
                       hintText: 'Search seashells',
-                      hintStyle: const TextStyle(color: Color(0xFF8B7768)),
+                      hintStyle: const TextStyle(color: Color(0xFF163E5C)),
                       prefixIcon: const Icon(
                         Icons.search,
-                        color: Color(0xFF8B5E3C),
+                        color: Color(0xFF0B2D4D),
                       ),
                       filled: true,
-                      fillColor: const Color.fromARGB(255, 248, 240, 230),
+                      fillColor: const Color(0xFFF5EEDC),
                       contentPadding: const EdgeInsets.symmetric(
                         vertical: 14.0,
                         horizontal: 16.0,
@@ -210,19 +213,19 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                 decoration: BoxDecoration(
                                   color:
                                       selected
-                                          ? const Color(0xFF8B5E3C)
-                                          : const Color(0xFFEADBC8),
+                                          ? const Color(0xFF0B2D4D)
+                                          : const Color(0xFFE8D8B8),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Text(
                                   filter,
                                   style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
                                     color:
                                         selected
-                                            ? Colors.white
-                                            : const Color(0xFF6B4B35),
+                                            ? const Color.fromARGB(255, 243, 242, 250)
+                                            : const Color(0xFF0B2D4D),
                                   ),
                                 ),
                               ),
@@ -240,7 +243,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                               'No shells match your search.',
                               style: TextStyle(
                                 fontSize: 13,
-                                color: Color(0xFF6B4B35),
+                                color: Color(0xFF163E5C),
                               ),
                             ),
                           )
@@ -279,14 +282,14 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: const Color(0xFFFAF8F2),
                                     borderRadius: BorderRadius.circular(16),
                                     border: Border.all(
-                                      color: const Color(0xFFD8C2A8),
+                                      color: const Color.fromARGB(183, 24, 11, 76),
                                     ),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withValues(
+                                        color: const Color.fromARGB(191, 11, 45, 77).withValues(
                                           alpha: 0.04,
                                         ),
                                         blurRadius: 10,
@@ -328,8 +331,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           style: const TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w400,
                                           ),
                                         ),
                                       ),

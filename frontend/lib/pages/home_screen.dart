@@ -2,7 +2,6 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
@@ -46,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const pageBg = Colors.white;
+    const pageBg = Color(0xFFFAF8F2);
 
     final pages = [
       HomeContent(
@@ -105,19 +104,15 @@ class HomeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color primaryText = const Color(0xFF3E2B18);
-    final Color secondaryText = const Color(0xFF6B4B35);
-    final Color accent = const Color(0xFF8B5E3C);
+    const primaryText = Color(0xFF1F2933);
 
-    return Stack(
-      children: [
-        SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 12.0,
-              vertical: 12.0,
-            ),
-            child: RefreshIndicator(
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 12.0,
+          vertical: 12.0,
+        ),
+        child: RefreshIndicator(
               onRefresh: () async {
                 // Just a visual indicator, no functionality
                 await Future.delayed(const Duration(milliseconds: 500));
@@ -130,40 +125,28 @@ class HomeContent extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          'Hi, Explorer',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: primaryText,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              'Hi, Explorer',
+                              style: TextStyle(
+                                fontSize: 23,
+                                fontWeight: FontWeight.w600,
+                                color: primaryText,
+                              ),
+                            ),
+                          ],
                         ),
+                        const SizedBox.shrink(),
                       ],
                     ),
                     const SizedBox(height: 6),
                     Text(
                       'What seashell will you discover today?',
-                      style: TextStyle(fontSize: 14, color: secondaryText),
+                      style: TextStyle(fontSize: 15, color: const Color.fromARGB(208, 22, 62, 92)),
                     ),
-                    const SizedBox(height: 18),
-
-                    // Banner carousel
-                    const SizedBox(height: 8),
-                    SizedBox(
-                      height: 160,
-                      child: _BannerCarousel(
-                        images: const [
-                          'lib/assets/images/banner/banner1.jpg',
-                          'lib/assets/images/banner/banner2.jpg',
-                          'lib/assets/images/banner/banner3.jpg',
-                        ],
-                        viewportFraction: 0.90,
-                        autoPlayInterval: Duration(seconds: 5),
-                      ),
-                    ),
-
-                    const SizedBox(height: 12),
-
+                    const SizedBox(height: 22),
+                  
                     // Categories row
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -172,6 +155,7 @@ class HomeContent extends StatelessWidget {
                           'Categories',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
+                            fontSize: 17,
                             color: primaryText,
                           ),
                         ),
@@ -179,7 +163,7 @@ class HomeContent extends StatelessWidget {
                           onTap: onSeeAll,
                           child: const Text(
                             'See All',
-                            style: TextStyle(color: Color(0xFF2D7896)),
+                            style: TextStyle(color: Color(0xFF0B2D4D), fontSize: 15),
                           ),
                         ),
                       ],
@@ -197,16 +181,6 @@ class HomeContent extends StatelessWidget {
                           {
                             'label': 'Bivalves',
                             'url': 'lib/assets/images/categories/Bivalves.png',
-                          },
-                          {
-                            'label': 'Cephalopods',
-                            'url':
-                                'lib/assets/images/categories/Cephalopods.png',
-                          },
-                          {
-                            'label': 'Scaphopods',
-                            'url':
-                                'lib/assets/images/categories/Scaphopods.png',
                           },
                           {
                             'label': 'Polyplacophora',
@@ -229,22 +203,23 @@ class HomeContent extends StatelessWidget {
                             child: Container(
                               height: 96,
                               decoration: BoxDecoration(
-                                color: const Color(0xFFF0E3D2),
+                                      color: const Color(0xFFF5EEDC),
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              padding: const EdgeInsets.all(12),
+                              padding: const EdgeInsets.all(8),
                               child: Row(
                                 children: [
                                   Container(
                                     width: 44,
                                     height: 44,
                                     decoration: BoxDecoration(
-                                      color: accent,
+                                      color: const Color(0xFFE8D8B8),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: const Icon(
                                       Icons.camera_alt,
-                                      color: Colors.white,
+                                      size: 30,
+                                      color: Color(0xFF0B2D4D),
                                     ),
                                   ),
                                   const SizedBox(width: 12),
@@ -259,82 +234,19 @@ class HomeContent extends StatelessWidget {
                                           'Scan Shell',
                                           style: TextStyle(
                                             fontWeight: FontWeight.w600,
-                                            fontSize: 12,
-                                            color: primaryText,
+                                            fontSize: 17,
+                                            color: const Color(0xFF0B2D4D),
                                           ),
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
                                           softWrap: true,
                                         ),
-                                        const SizedBox(height: 3),
+                                        const SizedBox(height: 1),
                                         Text(
                                           'Tap to scan and identify seashells',
                                           style: TextStyle(
-                                            color: secondaryText,
-                                            fontSize: 9,
-                                          ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          softWrap: true,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: onQuizTap,
-                            child: Container(
-                              height: 96,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFEADBC8),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              padding: const EdgeInsets.all(12),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 44,
-                                    height: 44,
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFF8B5E3C),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: const Icon(
-                                      Icons.quiz,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Flexible(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          'Quiz Time',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 12,
-                                            color: primaryText,
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          softWrap: true,
-                                        ),
-                                        const SizedBox(height: 3),
-                                        Text(
-                                          'Test your knowledge',
-                                          style: TextStyle(
-                                            color: secondaryText,
-                                            fontSize: 9,
+                                            color: const Color.fromARGB(204, 22, 62, 92),
+                                            fontSize: 15,
                                           ),
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
@@ -361,14 +273,15 @@ class HomeContent extends StatelessWidget {
                           'Explore shells',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
-                            color: primaryText,
+                            fontSize: 17,
+                            color: const Color(0xFF0B2D4D),
                           ),
                         ),
                         GestureDetector(
                           onTap: onSeeAll,
                           child: const Text(
                             'See All',
-                            style: TextStyle(color: Color(0xFF2D7896)),
+                            style: TextStyle(color: Color(0xFF0B2D4D), fontSize: 15),
                           ),
                         ),
                       ],
@@ -377,151 +290,80 @@ class HomeContent extends StatelessWidget {
 
                     // Explore grid (limited to a few items)
                     RandomShellsGrid(),
+
+                    const SizedBox(height: 12),
+
+                    // Quiz action
+                    GestureDetector(
+                      onTap: onQuizTap,
+                      child: Container(
+                        height: 96,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF5EEDC),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.all(12),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 44,
+                              height: 44,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFE8D8B8),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(
+                                Icons.quiz, 
+                                size: 30,
+                                color: Color(0xFF0B2D4D),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Flexible(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Quiz Time',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 17, 
+                                      color: Color(0xFF0B2D4D),
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 3),
+                                  Text(
+                                    'Test your knowledge about seashells',
+                                    style: TextStyle(
+                                      color: Color.fromARGB(208, 22, 62, 92),
+                                      fontSize: 15,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
           ),
-        ),
-        const Positioned.fill(child: _DriftingSandParticles()),
-      ],
     );
   }
-}
-
-class _DriftingSandParticles extends StatefulWidget {
-  const _DriftingSandParticles();
-
-  @override
-  State<_DriftingSandParticles> createState() => _DriftingSandParticlesState();
-}
-
-class _DriftingSandParticlesState extends State<_DriftingSandParticles>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-  late final List<_SandParticle> _particles;
-
-  @override
-  void initState() {
-    super.initState();
-    _particles = _createParticles();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 30),
-    )..repeat();
-  }
-
-  List<_SandParticle> _createParticles() {
-    final random = Random(7);
-    return List.generate(84, (index) {
-      final positionGroup = index % 3;
-      return _SandParticle(
-        x:
-            positionGroup == 0
-                ? 0.04 + random.nextDouble() * 0.22
-                : positionGroup == 1
-                ? 0.74 + random.nextDouble() * 0.22
-                : 0.25 + random.nextDouble() * 0.50,
-        y: random.nextDouble(),
-        size: 1.1 + random.nextDouble() * 1.2,
-        speed: 0.18 + random.nextDouble() * 0.32,
-        sway: 2.0 + random.nextDouble() * 5.0,
-        phase: random.nextDouble() * pi * 2,
-        opacity: 0.12 + random.nextDouble() * 0.16,
-      );
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: RepaintBoundary(
-        child: AnimatedBuilder(
-          animation: _controller,
-          builder: (context, child) {
-            return CustomPaint(
-              painter: _SandParticlePainter(
-                particles: _particles,
-                progress: _controller.value,
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class _SandParticle {
-  const _SandParticle({
-    required this.x,
-    required this.y,
-    required this.size,
-    required this.speed,
-    required this.sway,
-    required this.phase,
-    required this.opacity,
-  });
-
-  final double x;
-  final double y;
-  final double size;
-  final double speed;
-  final double sway;
-  final double phase;
-  final double opacity;
-}
-
-class _SandParticlePainter extends CustomPainter {
-  const _SandParticlePainter({required this.particles, required this.progress});
-
-  final List<_SandParticle> particles;
-  final double progress;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    for (final particle in particles) {
-      final verticalProgress =
-          (particle.y + progress * particle.speed) % 1.15 - 0.075;
-      final x =
-          size.width * particle.x +
-          sin(progress * pi * 2 + particle.phase) * particle.sway;
-      final fade = 0.55 + 0.45 * sin(progress * pi * 2 + particle.phase * 1.7);
-      final paint =
-          Paint()
-            ..color = const Color(
-              0xFF7EAFC0,
-            ).withValues(alpha: (particle.opacity * fade).clamp(0.0, 1.0));
-
-      canvas.drawCircle(
-        Offset(x, size.height * verticalProgress),
-        particle.size,
-        paint,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(_SandParticlePainter oldDelegate) =>
-      oldDelegate.progress != progress;
 }
 
 class _BannerCarousel extends StatefulWidget {
-  const _BannerCarousel({
-    required this.images,
-    this.viewportFraction = 0.75,
-    this.autoPlayInterval = const Duration(seconds: 3),
-  });
+  const _BannerCarousel({required this.images});
 
   final List<String> images;
-  final double viewportFraction;
-  final Duration autoPlayInterval;
 
   @override
   State<_BannerCarousel> createState() => _BannerCarouselState();
@@ -536,10 +378,7 @@ class _BannerCarouselState extends State<_BannerCarousel> {
   void initState() {
     super.initState();
     _currentPage = 0;
-    _controller = PageController(
-      viewportFraction: widget.viewportFraction,
-      initialPage: 0,
-    );
+    _controller = PageController(initialPage: 0);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _startAutoScroll();
     });
@@ -547,7 +386,7 @@ class _BannerCarouselState extends State<_BannerCarousel> {
 
   void _startAutoScroll() {
     _timer?.cancel();
-    _timer = Timer.periodic(widget.autoPlayInterval, (_) {
+    _timer = Timer.periodic(const Duration(seconds: 3), (_) {
       if (!mounted || !_controller.hasClients) return;
       final nextPage = (_currentPage + 1) % widget.images.length;
       _currentPage = nextPage;
@@ -589,8 +428,7 @@ class _BannerCarouselState extends State<_BannerCarousel> {
                       ? NetworkImage(imagePath)
                       : AssetImage(imagePath) as ImageProvider,
               fit: BoxFit.cover,
-              width:
-                  MediaQuery.of(context).size.width * widget.viewportFraction,
+              width: MediaQuery.of(context).size.width * 0.75,
             ),
           ),
         );
@@ -717,9 +555,9 @@ class _AutoScrollCategoriesState extends State<_AutoScrollCategories> {
             child: Container(
               width: 92,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: const Color.fromARGB(132, 245, 238, 220),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFD8C2A8)),
+                border: Border.all(color: const Color.fromARGB(201, 232, 216, 184)),
               ),
               padding: const EdgeInsets.all(8),
               child: Column(
@@ -742,7 +580,7 @@ class _AutoScrollCategoriesState extends State<_AutoScrollCategories> {
                   const SizedBox(height: 6),
                   Text(
                     label,
-                    style: const TextStyle(fontSize: 11),
+                    style: const TextStyle(fontSize: 14),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -785,13 +623,19 @@ class _RandomShellsGridState extends State<RandomShellsGrid> {
               .whereType<Map>()
               .map((shell) => Map<String, dynamic>.from(shell))
               .where((shell) => shell['basic_identification'] is Map)
+              .where((shell) {
+                final classification =
+                    shell['basic_identification']['classification']?.toString();
+                return classification != 'Cephalopod' &&
+                    classification != 'Scaphopod';
+              })
               .toList();
 
       // Shuffle and get first 9 shells
       shells.shuffle();
       return shells.take(9).toList();
     } catch (e) {
-      print('Error loading shells: $e');
+      debugPrint('Error loading shells: $e');
       return [];
     }
   }
@@ -822,9 +666,9 @@ class _RandomShellsGridState extends State<RandomShellsGrid> {
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
-            crossAxisSpacing: 8,
-            mainAxisSpacing: 8,
-            mainAxisExtent: 170,
+            crossAxisSpacing: 7,
+            mainAxisSpacing: 7,
+            mainAxisExtent: 140,
           ),
           itemCount: shells.length,
           itemBuilder: (context, index) {
@@ -846,11 +690,11 @@ class _RandomShellsGridState extends State<RandomShellsGrid> {
               },
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: const Color.fromARGB(130, 245, 238, 220),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFFD8C2A8)),
+                  border: Border.all(color: const Color.fromARGB(138, 11, 45, 77)),
                 ),
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(2),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -863,7 +707,7 @@ class _RandomShellsGridState extends State<RandomShellsGrid> {
                           borderRadius: BorderRadius.circular(8),
                           child: Image.asset(
                             shell['image_path'] ?? 'lib/assets/images/logo.png',
-                            fit: BoxFit.cover,
+                            fit: BoxFit.contain,
                             errorBuilder: (context, error, stackTrace) {
                               return Image.asset(
                                 'lib/assets/images/logo.png',
@@ -874,14 +718,13 @@ class _RandomShellsGridState extends State<RandomShellsGrid> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 15),
                     Text(
                       commonName,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 15,
                       ),
                     ),
                   ],
