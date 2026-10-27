@@ -116,6 +116,12 @@ class ShellDetailScreen extends StatelessWidget {
     );
 
     final edibilityStatus = _safeString(edibility['edibility'] ?? 'Unknown');
+    final isNotEdible = edibilityStatus.toLowerCase().contains('inedible') ||
+        edibilityStatus.toLowerCase().contains('not edible') ||
+        edibilityStatus.toLowerCase().contains('not eaten') ||
+        edibilityStatus.toLowerCase().contains('not consumed') ||
+        edibilityStatus.toLowerCase().contains('rarely eaten') ||
+        edibilityStatus.toLowerCase().contains('too small');
 
     return Scaffold(
       backgroundColor: const Color(0xFFFAF8F2),
@@ -140,35 +146,62 @@ class ShellDetailScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-                child: Container(
-                  width: 220,
-                  height: 220,
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFAF8F2),
-                    borderRadius: BorderRadius.circular(28),
-                    border: Border.all(color: const Color(0xFFE8D8B8)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF0B2D4D).withValues(alpha: 0.05),
-                        blurRadius: 12,
-                        offset: const Offset(0, 6),
+                child: Stack(
+                  children: [
+                    Container(
+                      width: 220,
+                      height: 220,
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFAF8F2),
+                        borderRadius: BorderRadius.circular(28),
+                        border: Border.all(
+                          color: isNotEdible
+                              ? const Color(0xFFE53935)
+                              : const Color(0xFFE8D8B8),
+                          width: isNotEdible ? 3 : 1,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFF0B2D4D).withValues(alpha: 0.05),
+                            blurRadius: 12,
+                            offset: const Offset(0, 6),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.asset(
-                      imagePath,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Image.asset(
-                          'lib/assets/images/logo.png',
-                          fit: BoxFit.contain,
-                        );
-                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.asset(
+                          imagePath,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              'lib/assets/images/logo.png',
+                              fit: BoxFit.contain,
+                            );
+                          },
+                        ),
+                      ),
                     ),
-                  ),
+                    if (isNotEdible)
+                      Positioned(
+                        top: 8,
+                        left: 8,
+                        child: Container(
+                          width: 38,
+                          height: 38,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFE53935),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.warning_amber_rounded,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
               const SizedBox(height: 20),
@@ -202,6 +235,63 @@ class ShellDetailScreen extends StatelessWidget {
                   _chip('Edibility', edibilityStatus),
                 ],
               ),
+              if (isNotEdible) ...[
+                const SizedBox(height: 20),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFF0F0),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: const Color(0xFFE53935), width: 2),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 32,
+                        height: 32,
+                        margin: const EdgeInsets.only(right: 12),
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFE53935),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.warning_amber_rounded,
+                          color: Colors.white,
+                          size: 22,
+                        ),
+                      ),
+                      Expanded(
+                        child: RichText(
+                          text: const TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'DANGER!\n',
+                                style: TextStyle(
+                                  color: Color(0xFFE53935),
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w800,
+                                  height: 1.2,
+                                ),
+                              ),
+                              TextSpan(
+                                text: 'This shell can be poisonous.\nDo not eat, touch, or collect it.',
+                                style: TextStyle(
+                                  color: Color(0xFF0B2D4D),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  height: 1.4,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
               const SizedBox(height: 20),
               _buildInfoTile(
                 'Habitat',

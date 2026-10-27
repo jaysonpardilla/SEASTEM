@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,11 +22,21 @@ class _QuizScreenState extends State<QuizScreen> {
   String? _error;
   bool _isLoading = true;
   bool _showResult = false;
+  bool _showFeedback = false;
+  String _feedbackText = '';
+  Color _feedbackColor = const Color(0xFF2E7D32);
+  Timer? _feedbackTimer;
 
   @override
   void initState() {
     super.initState();
     _loadQuiz();
+  }
+
+  @override
+  void dispose() {
+    _feedbackTimer?.cancel();
+    super.dispose();
   }
 
   Future<void> _loadQuiz() async {
@@ -73,7 +85,23 @@ class _QuizScreenState extends State<QuizScreen> {
     final manager = _manager;
     if (manager == null) return;
     await manager.selectAnswer(answerIndex);
-    if (mounted) setState(() {});
+    if (!mounted) return;
+
+    final isCorrect =
+        manager.currentQuestion != null &&
+        answerIndex == manager.currentQuestion!.answerIndex;
+    _feedbackTimer?.cancel();
+    setState(() {
+      _showResult = false;
+      _feedbackText = isCorrect ? 'Correct!' : 'Wrong!';
+      _feedbackColor = isCorrect ? const Color(0xFF2E7D32) : const Color(0xFFB42318);
+      _showFeedback = true;
+    });
+
+    _feedbackTimer = Timer(const Duration(seconds: 1), () {
+      if (!mounted) return;
+      setState(() => _showFeedback = false);
+    });
   }
 
   Future<void> _nextQuestion() async {
@@ -208,39 +236,70 @@ class _QuizScreenState extends State<QuizScreen> {
 
   Widget _buildQuestion(QuizManager manager) {
     final question = manager.currentQuestion!;
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 30, 16, 24),
+
+    return Stack(
       children: [
-        Text(
-          question.question,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 16,
-            height: 1.3,
-            fontWeight: FontWeight.w700,
-            color: Color(0xFF0B2D4D),
-          ),
+        ListView(
+          padding: const EdgeInsets.fromLTRB(16, 30, 16, 24),
+          children: [
+            Text(
+              question.question,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 16,
+                height: 1.3,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF0B2D4D),
+              ),
+            ),
+            const SizedBox(height: 30),
+            if (question.type == 'image_choice')
+              _buildImageChoices(question)
+            else
+              _buildTextChoices(question),
+            const SizedBox(height: 30),
+            FilledButton(
+              onPressed: manager.selectedAnswerIndex == null ? null : _nextQuestion,
+              style: FilledButton.styleFrom(
+                backgroundColor: const Color(0xFF0B2D4D),
+                foregroundColor: const Color(0xFFE8D8B8),
+                disabledBackgroundColor: const Color(0xFFE8D8B8),
+                disabledForegroundColor: const Color(0xFF163E5C),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                textStyle: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              child: Text(manager.isLastQuestion ? 'Finish Quiz' : 'Next Question'),
+            ),
+          ],
         ),
-        const SizedBox(height: 30),
-        if (question.type == 'image_choice')
-          _buildImageChoices(question)
-        else
-          _buildTextChoices(question),
-        const SizedBox(height: 30),
-        FilledButton(
-          onPressed: manager.selectedAnswerIndex == null ? null : _nextQuestion,
-          style: FilledButton.styleFrom(
-            backgroundColor: const Color(0xFF0B2D4D),
-            foregroundColor: const Color(0xFFE8D8B8),
-            disabledBackgroundColor: const Color(0xFFE8D8B8),
-            disabledForegroundColor: const Color(0xFF163E5C),
-            padding: const EdgeInsets.symmetric(vertical: 14),
-            textStyle: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
+        IgnorePointer(
+          ignoring: !_showFeedback,
+          child: Center(
+            child: AnimatedOpacity(
+              opacity: _showFeedback ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeInOut,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
+                decoration: BoxDecoration(
+                  color: _feedbackColor,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Text(
+                  _feedbackText,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
             ),
           ),
-          child: Text(manager.isLastQuestion ? 'Finish Quiz' : 'Next Question'),
         ),
       ],
     );
@@ -398,50 +457,62 @@ class _ChoiceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(14),
-      child: Ink(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color:
-              wrong
-                  ? const Color(0xFFFFF1F1)
-                  : correct
-                  ? const Color(0xFFE8D8B8)
-                  : const Color(0xFFFAF8F2),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color:
-                wrong
-                    ? const Color(0xFFB42318)
-                    : correct
-                    ? const Color(0xFF0B2D4D)
-                    : selected
-                    ? const Color(0xFF0B2D4D)
-                    : const Color(0xFFE8D8B8),
-            width: selected || correct || wrong ? 2 : 1,
+    final revealColor =
+        wrong
+            ? const Color(0xFFFFF1F1)
+            : correct
+            ? const Color(0xFFE8F5E9)
+            : const Color(0xFFFAF8F2);
+    final revealBorderColor =
+        wrong
+            ? const Color(0xFFB42318)
+            : correct
+            ? const Color(0xFF2E7D32)
+            : selected
+            ? const Color(0xFF0B2D4D)
+            : const Color(0xFFE8D8B8);
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: Ink(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: revealColor,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: revealBorderColor,
+              width: selected || correct || wrong ? 2 : 1,
+            ),
+            boxShadow:
+                correct
+                    ? const [
+                      BoxShadow(
+                        color: Color(0x332E7D32),
+                        blurRadius: 12,
+                        spreadRadius: 2,
+                      ),
+                    ]
+                    : wrong
+                    ? const [
+                      BoxShadow(
+                        color: Color(0x33B42318),
+                        blurRadius: 10,
+                        spreadRadius: 1,
+                      ),
+                    ]
+                    : null,
           ),
-          boxShadow:
-              correct
-                  ? const [
-                    BoxShadow(
-                      color: Color(0x33E8D8B8),
-                      blurRadius: 12,
-                      spreadRadius: 2,
-                    ),
-                  ]
-                  : wrong
-                  ? const [
-                    BoxShadow(
-                      color: Color(0x33B42318),
-                      blurRadius: 10,
-                      spreadRadius: 1,
-                    ),
-                  ]
-                  : null,
+          child: AnimatedOpacity(
+            opacity: selected || correct || wrong ? 1 : 0.92,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+            child: child,
+          ),
         ),
-        child: child,
       ),
     );
   }

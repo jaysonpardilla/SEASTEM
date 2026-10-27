@@ -25,7 +25,8 @@ class ScanScreen extends StatefulWidget {
 
 class _ScanScreenState extends State<ScanScreen>
     with SingleTickerProviderStateMixin {
-  static const String _defaultBackendUrl = 'https://shellscan-v1-production-fc95.up.railway.app';
+  static const String _defaultBackendUrl =
+      'https://shellscan-v1-production-fc95.up.railway.app';
   static const String _backendUrlOverride = String.fromEnvironment(
     'BACKEND_URL',
     defaultValue: _defaultBackendUrl,
@@ -36,6 +37,9 @@ class _ScanScreenState extends State<ScanScreen>
   late AnimationController _animationController;
   bool _isInitialized = false;
   bool _isProcessing = false;
+  double _minZoomLevel = 1;
+  double _maxZoomLevel = 1;
+  double _zoomLevel = 1;
   XFile? _capturedImage;
   Timer? _processingTimer;
 
@@ -132,8 +136,34 @@ class _ScanScreenState extends State<ScanScreen>
 
       _initializeControllerFuture = _cameraController!.initialize();
       setState(() {});
+      await _initializeControllerFuture;
+
+      final minZoomLevel = await _cameraController!.getMinZoomLevel();
+      final maxZoomLevel = await _cameraController!.getMaxZoomLevel();
+      if (!mounted) return;
+      setState(() {
+        _minZoomLevel = minZoomLevel;
+        _maxZoomLevel = maxZoomLevel;
+        _zoomLevel = minZoomLevel;
+      });
     } catch (e) {
       print('Error initializing camera: $e');
+    }
+  }
+
+  Future<void> _setZoomLevel(double zoomLevel) async {
+    final controller = _cameraController;
+    if (controller == null || !controller.value.isInitialized) return;
+
+    final targetZoom = zoomLevel.clamp(_minZoomLevel, _maxZoomLevel).toDouble();
+    setState(() => _zoomLevel = targetZoom);
+    try {
+      await controller.setZoomLevel(targetZoom);
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Unable to adjust camera zoom: $error')),
+      );
     }
   }
 
@@ -271,10 +301,7 @@ class _ScanScreenState extends State<ScanScreen>
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Color(0xFFFAF8F2),
-          ),
+          icon: const Icon(Icons.arrow_back, color: Color(0xFFFAF8F2)),
           onPressed: () {
             if (widget.onBackPressed != null) {
               widget.onBackPressed!.call();
@@ -345,11 +372,15 @@ class _ScanScreenState extends State<ScanScreen>
                                               decoration: BoxDecoration(
                                                 border: Border(
                                                   top: BorderSide(
-                                                    color: const Color(0xFFE8D8B8),
+                                                    color: const Color(
+                                                      0xFFE8D8B8,
+                                                    ),
                                                     width: 1,
                                                   ),
                                                   left: BorderSide(
-                                                    color: const Color(0xFFE8D8B8),
+                                                    color: const Color(
+                                                      0xFFE8D8B8,
+                                                    ),
                                                     width: 1,
                                                   ),
                                                 ),
@@ -367,11 +398,15 @@ class _ScanScreenState extends State<ScanScreen>
                                               decoration: BoxDecoration(
                                                 border: Border(
                                                   top: BorderSide(
-                                                    color: const Color(0xFFE8D8B8),
+                                                    color: const Color(
+                                                      0xFFE8D8B8,
+                                                    ),
                                                     width: 1,
                                                   ),
                                                   right: BorderSide(
-                                                    color: const Color(0xFFE8D8B8),
+                                                    color: const Color(
+                                                      0xFFE8D8B8,
+                                                    ),
                                                     width: 1,
                                                   ),
                                                 ),
@@ -395,11 +430,15 @@ class _ScanScreenState extends State<ScanScreen>
                                               decoration: BoxDecoration(
                                                 border: Border(
                                                   bottom: BorderSide(
-                                                    color: const Color(0xFFE8D8B8),
+                                                    color: const Color(
+                                                      0xFFE8D8B8,
+                                                    ),
                                                     width: 1,
                                                   ),
                                                   left: BorderSide(
-                                                    color: const Color(0xFFE8D8B8),
+                                                    color: const Color(
+                                                      0xFFE8D8B8,
+                                                    ),
                                                     width: 1,
                                                   ),
                                                 ),
@@ -416,11 +455,15 @@ class _ScanScreenState extends State<ScanScreen>
                                               decoration: BoxDecoration(
                                                 border: Border(
                                                   bottom: BorderSide(
-                                                    color: const Color(0xFFE8D8B8),
+                                                    color: const Color(
+                                                      0xFFE8D8B8,
+                                                    ),
                                                     width: 1,
                                                   ),
                                                   right: BorderSide(
-                                                    color: const Color(0xFFE8D8B8),
+                                                    color: const Color(
+                                                      0xFFE8D8B8,
+                                                    ),
                                                     width: 1,
                                                   ),
                                                 ),
@@ -467,7 +510,9 @@ class _ScanScreenState extends State<ScanScreen>
                                           ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: const Color(0xFFE8D8B8).withValues(alpha: 0.2),
+                                              color: const Color(
+                                                0xFFE8D8B8,
+                                              ).withValues(alpha: 0.2),
                                               blurRadius: 6,
                                               spreadRadius: 1,
                                             ),
@@ -488,6 +533,52 @@ class _ScanScreenState extends State<ScanScreen>
                             ),
                           ),
                 ),
+
+                if (!_isProcessing && _maxZoomLevel > _minZoomLevel)
+                  Positioned(
+                    bottom: 82,
+                    left: 24,
+                    right: 24,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF0B2D4D).withValues(alpha: 0.8),
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.zoom_out, color: Color(0xFFFAF8F2)),
+                          Expanded(
+                            child: Slider(
+                              value: _zoomLevel.clamp(
+                                _minZoomLevel,
+                                _maxZoomLevel,
+                              ),
+                              min: _minZoomLevel,
+                              max: _maxZoomLevel,
+                              activeColor: const Color(0xFFE8D8B8),
+                              inactiveColor: const Color(
+                                0xFFE8D8B8,
+                              ).withValues(alpha: 0.4),
+                              onChanged: _setZoomLevel,
+                            ),
+                          ),
+                          const Icon(Icons.zoom_in, color: Color(0xFFFAF8F2)),
+                          const SizedBox(width: 8),
+                          Text(
+                            '${_zoomLevel.toStringAsFixed(1)}x',
+                            style: const TextStyle(
+                              color: Color(0xFFFAF8F2),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
 
                 if (_isProcessing)
                   Positioned.fill(
@@ -515,7 +606,9 @@ class _ScanScreenState extends State<ScanScreen>
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFF0B2D4D).withValues(alpha: 0.18),
+                                color: const Color(
+                                  0xFF0B2D4D,
+                                ).withValues(alpha: 0.18),
                                 blurRadius: 12,
                                 offset: const Offset(0, 8),
                               ),
@@ -580,7 +673,9 @@ class _ScanScreenState extends State<ScanScreen>
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFF0B2D4D).withValues(alpha: 0.4),
+                                color: const Color(
+                                  0xFF0B2D4D,
+                                ).withValues(alpha: 0.4),
                                 blurRadius: 12,
                                 offset: const Offset(0, 6),
                               ),
